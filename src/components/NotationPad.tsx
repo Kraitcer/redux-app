@@ -20,7 +20,7 @@ interface Props {
   onDelete: (id: string) => void;
   onEdit: (id: string, name: string) => void;
   onComplete: (id: string) => void;
-  moveItem: (fromIndex: number, toIndex: number) => void;
+  // moveItem: (fromIndex: number, toIndex: number) => void;
   index: number;
   // children: number;
 }
@@ -35,7 +35,7 @@ export const NotationPad = ({
   onDelete,
   onEdit: editNotation,
   onComplete: completeNotation,
-  moveItem,
+  // moveItem,
   index,
 }: Props) => {
   // const [, ref] = useDrag({

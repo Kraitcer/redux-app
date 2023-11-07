@@ -12,6 +12,12 @@ import {
 
 import store from "../store/store";
 import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
+import {
   MdDone,
   MdOutlineNotificationsActive,
   AiOutlineUnorderedList,
@@ -68,6 +74,7 @@ const ProjectsList = () => {
       icon: <MdDone size={22} />,
     },
   ];
+
   // =================================ADD=============================
   const addProjectToStore = (project: string) => {
     store.dispatch(addProject(project));
@@ -89,12 +96,21 @@ const ProjectsList = () => {
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================
-  const moveItem = (fromIndex: number, toIndex: number) => {
-    const updatedList = [...projects];
-    const [movedItem] = updatedList.splice(fromIndex, 1);
-    updatedList.splice(toIndex, 0, movedItem);
-    store.dispatch({ type: "SET_PROJECTS", payload: updatedList });
-  };
+  function handleOnDragEnd(result: DropResult) {
+    if (!result.destination) return;
+
+    const items = Array.from(projects);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    store.dispatch({ type: "SET_PROJECTS", payload: items });
+    // updateCharacters(items);
+  }
+  // const moveItem = (fromIndex: number, toIndex: number) => {
+  //   const updatedList = [...projects];
+  //   const [movedItem] = updatedList.splice(fromIndex, 1);
+  //   updatedList.splice(toIndex, 0, movedItem);
+  //   store.dispatch({ type: "SET_PROJECTS", payload: updatedList });
+  // };
   // ==============================RENDER FASE===============================
   return (
     <Flex
@@ -121,50 +137,77 @@ const ProjectsList = () => {
           buttonName="Add"
         />
         <Flex w={"560px"} h={"34rem"} mb={0}>
-          <Flex
-            flexDirection={"column"}
-            overflowY={"auto"}
-            bg={"blue.100"}
-            w={"100%"}
-            h={"100%"}
-            borderTopRadius={20}
-            gap={2}
-            pl={3}
-            pr={3}
-            pt={3}
-            pb={2}
-          >
-            {visibleProjects.map((project, index) =>
-              project.isEditing ? (
-                <EditProject
-                  key={index}
-                  notationID={project.id}
-                  notationName={project.projectName}
-                  onEdit={editProjectOut}
-                />
-              ) : (
-                <ProjectPad
-                  moveItem={moveItem}
-                  nameWidth={"300px"}
-                  width={"100%"}
-                  onDelete={deleteProjectOut}
-                  key={project.id}
-                  index={index}
-                  notationID={project.id}
-                  notationName={project.projectName}
-                  complited={project.complited}
-                  onEdit={editProjectOut}
-                  onComplete={completeProjectOut}
-                  children={
-                    <TasksBadge
-                      currentProjectID={project.id}
-                      currentProjectName={project.projectName}
-                    />
-                  }
-                />
-              )
-            )}
-          </Flex>
+          <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="projects">
+              {(provided) => (
+                <Flex
+                  flexDirection={"column"}
+                  overflowY={"auto"}
+                  bg={"blue.100"}
+                  w={"100%"}
+                  h={"100%"}
+                  borderTopRadius={20}
+                  gap={2}
+                  pl={3}
+                  pr={3}
+                  pt={3}
+                  pb={2}
+                >
+                  <ul
+                    style={{ listStyleType: "none" }}
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                  >
+                    {visibleProjects.map((project, index) =>
+                      project.isEditing ? (
+                        <EditProject
+                          key={index}
+                          notationID={project.id}
+                          notationName={project.projectName}
+                          onEdit={editProjectOut}
+                        />
+                      ) : (
+                        <Draggable
+                          key={project.id}
+                          draggableId={project.id}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <li
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <ProjectPad
+                                // moveItem={moveItem}
+                                nameWidth={"300px"}
+                                width={"100%"}
+                                onDelete={deleteProjectOut}
+                                key={project.id}
+                                index={index}
+                                notationID={project.id}
+                                notationName={project.projectName}
+                                complited={project.complited}
+                                onEdit={editProjectOut}
+                                onComplete={completeProjectOut}
+                                children={
+                                  <TasksBadge
+                                    currentProjectID={project.id}
+                                    currentProjectName={project.projectName}
+                                  />
+                                }
+                              />
+                            </li>
+                          )}
+                        </Draggable>
+                      )
+                    )}
+                    {provided.placeholder}
+                  </ul>
+                </Flex>
+              )}
+            </Droppable>
+          </DragDropContext>
         </Flex>
 
         <Flex
