@@ -11,8 +11,6 @@ import { persistor } from "./store/store";
 
 import router from "./routes";
 
-import reportWebVitals from "./reportWebVitals";
-
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
