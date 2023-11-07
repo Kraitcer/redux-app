@@ -129,23 +129,23 @@ const ProjectsList = () => {
           placeHolder="Choose New Project"
           buttonName="Add"
         />
-        <Flex w={"560px"} h={"34rem"} mb={0}>
-          <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Droppable droppableId="projects">
-              {(provided) => (
-                <Flex
-                  flexDirection={"column"}
-                  overflowY={"auto"}
-                  bg={"blue.100"}
-                  w={"100%"}
-                  h={"100%"}
-                  borderTopRadius={20}
-                  gap={2}
-                  pl={3}
-                  pr={3}
-                  pt={3}
-                  pb={2}
-                >
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+          <Flex w={"560px"} h={"34rem"} mb={0}>
+            <Flex
+              flexDirection={"column"}
+              overflowY={"auto"}
+              bg={"blue.100"}
+              w={"100%"}
+              h={"100%"}
+              borderTopRadius={20}
+              gap={2}
+              pl={3}
+              pr={3}
+              pt={3}
+              pb={2}
+            >
+              <Droppable droppableId="projects">
+                {(provided) => (
                   <ul
                     style={{ listStyleType: "none" }}
                     {...provided.droppableProps}
@@ -196,11 +196,11 @@ const ProjectsList = () => {
                     )}
                     {provided.placeholder}
                   </ul>
-                </Flex>
-              )}
-            </Droppable>
-          </DragDropContext>
-        </Flex>
+                )}
+              </Droppable>
+            </Flex>
+          </Flex>
+        </DragDropContext>
 
         <Flex
           bg={"blue.400"}
