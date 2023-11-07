@@ -4,8 +4,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Provider } from "react-redux";
 import store from "./store/store";
 import { RouterProvider } from "react-router-dom";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+// import { DndProvider } from "react-dnd";
+// import { HTML5Backend } from "react-dnd-html5-backend";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store/store";
 
@@ -17,11 +17,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     //  theme={theme}
     >
       <Provider store={store}>
-        <DndProvider backend={HTML5Backend}>
-          <PersistGate loading={null} persistor={persistor}>
-            <RouterProvider router={router} />
-          </PersistGate>
-        </DndProvider>
+        {/* <DndProvider backend={HTML5Backend}> */}
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+        {/* </DndProvider> */}
       </Provider>
     </ChakraProvider>
   </React.StrictMode>

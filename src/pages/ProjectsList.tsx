@@ -146,12 +146,6 @@ const ProjectsList = () => {
                 <ProjectPad
                   moveItem={moveItem}
                   nameWidth={"300px"}
-                  children={
-                    <TasksBadge
-                      currentProjectID={project.id}
-                      currentProjectName={project.projectName}
-                    />
-                  }
                   width={"100%"}
                   onDelete={deleteProjectOut}
                   key={project.id}
@@ -161,6 +155,12 @@ const ProjectsList = () => {
                   complited={project.complited}
                   onEdit={editProjectOut}
                   onComplete={completeProjectOut}
+                  children={
+                    <TasksBadge
+                      currentProjectID={project.id}
+                      currentProjectName={project.projectName}
+                    />
+                  }
                 />
               )
             )}

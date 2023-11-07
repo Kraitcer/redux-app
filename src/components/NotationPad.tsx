@@ -38,23 +38,29 @@ export const NotationPad = ({
   moveItem,
   index,
 }: Props) => {
-  const [, ref] = useDrag({
-    type: dndItemsTypes.PAD,
-    item: { id: notationID },
-  });
+  // const [, ref] = useDrag({
+  //   type: dndItemsTypes.PAD,
+  //   item: { id: notationID },
+  // });
 
-  const [, drop] = useDrop({
-    accept: dndItemsTypes.PAD,
-    hover: (draggedItem: { index: number }) => {
-      if (draggedItem.index !== index) {
-        moveItem(draggedItem.index, index);
-        draggedItem.index = index;
-      }
-    },
-  });
+  // const [, drop] = useDrop({
+  //   accept: dndItemsTypes.PAD,
+  //   hover: (draggedItem: { index: number }) => {
+  //     if (draggedItem.index !== index) {
+  //       moveItem(draggedItem.index, index);
+  //       draggedItem.index = index;
+  //     }
+  //   },
+  // });
 
   return (
-    <HStack gap={0} mr={0} mb={1} w={"100%"} ref={(node) => ref(drop(node))}>
+    <HStack
+      gap={0}
+      mr={0}
+      mb={1}
+      w={"100%"}
+      //  ref={(node) => ref(drop(node))}
+    >
       <Flex
         bg={"orange.300"}
         h={10}
