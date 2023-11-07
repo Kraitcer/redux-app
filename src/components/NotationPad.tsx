@@ -20,9 +20,7 @@ interface Props {
   onDelete: (id: string) => void;
   onEdit: (id: string, name: string) => void;
   onComplete: (id: string) => void;
-  // moveItem: (fromIndex: number, toIndex: number) => void;
   index: number;
-  // children: number;
 }
 
 export const NotationPad = ({
@@ -35,32 +33,10 @@ export const NotationPad = ({
   onDelete,
   onEdit: editNotation,
   onComplete: completeNotation,
-  // moveItem,
   index,
 }: Props) => {
-  // const [, ref] = useDrag({
-  //   type: dndItemsTypes.PAD,
-  //   item: { id: notationID },
-  // });
-
-  // const [, drop] = useDrop({
-  //   accept: dndItemsTypes.PAD,
-  //   hover: (draggedItem: { index: number }) => {
-  //     if (draggedItem.index !== index) {
-  //       moveItem(draggedItem.index, index);
-  //       draggedItem.index = index;
-  //     }
-  //   },
-  // });
-
   return (
-    <HStack
-      gap={0}
-      mr={0}
-      mb={1}
-      w={"100%"}
-      //  ref={(node) => ref(drop(node))}
-    >
+    <HStack gap={0} mr={0} mb={1} w={"100%"}>
       <Flex
         bg={"orange.300"}
         h={10}
@@ -80,15 +56,10 @@ export const NotationPad = ({
         color={"white"}
         w={width}
         h={10}
-        // p={1.5}
-        // pl={3}
-        // pr={2}
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
         cursor={"pointer"}
-
-        // flexDirection={"raw"}
       >
         <Flex justifyContent={"space-between"} alignItems={"center"}>
           <Text

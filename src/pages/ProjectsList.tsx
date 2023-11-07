@@ -103,14 +103,7 @@ const ProjectsList = () => {
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     store.dispatch({ type: "SET_PROJECTS", payload: items });
-    // updateCharacters(items);
   }
-  // const moveItem = (fromIndex: number, toIndex: number) => {
-  //   const updatedList = [...projects];
-  //   const [movedItem] = updatedList.splice(fromIndex, 1);
-  //   updatedList.splice(toIndex, 0, movedItem);
-  //   store.dispatch({ type: "SET_PROJECTS", payload: updatedList });
-  // };
   // ==============================RENDER FASE===============================
   return (
     <Flex
@@ -179,7 +172,6 @@ const ProjectsList = () => {
                               {...provided.dragHandleProps}
                             >
                               <ProjectPad
-                                // moveItem={moveItem}
                                 nameWidth={"300px"}
                                 width={"100%"}
                                 onDelete={deleteProjectOut}
