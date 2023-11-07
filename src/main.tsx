@@ -11,10 +11,7 @@ import { persistor } from "./store/store";
 
 import router from "./routes";
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
-root.render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider
     //  theme={theme}
