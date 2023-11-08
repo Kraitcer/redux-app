@@ -51,7 +51,7 @@ export const NotationPad = ({
       value={notationFor}
       id={notationID}
       style={{ boxShadow, y }}
-      dragListener={false}
+      // dragListener={false}
       dragControls={dragControls}
     >
       <HStack gap={0} mr={0} mb={1} w={"100%"}>
@@ -85,6 +85,7 @@ export const NotationPad = ({
         >
           <Flex justifyContent={"space-between"} alignItems={"center"}>
             <Text
+              // cursor={"none"}
               as={complited === true ? "del" : undefined}
               m={0}
               ml={2}

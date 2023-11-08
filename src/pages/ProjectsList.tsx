@@ -42,7 +42,7 @@ const ProjectsList = () => {
   const completeProjects = useSelector(selectCompletedProjects);
   const activeProjects = useSelector(selectActiveProjects);
 
-  const [projectsList, setProjectsList] = useState(projects);
+  const [projectsList, setProjectsList] = useState<Projects[]>(projects);
 
   const [renderFilter, setRenderFilter] = useState("all");
 
