@@ -96,16 +96,9 @@ const ProjectsList = () => {
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================
-  // console.log();
   useEffect(() => {
-    store.dispatch(
-      setProjects(projectsList)
-      //   reorderProjects(result.source.index, result.destination.index)
-    );
+    store.dispatch(setProjects(projectsList));
   }, [projectsList]);
-  // store.dispatch(
-  //   reorderProjects(result.source.index, result.destination.index)
-  // );
   // ==============================RENDER FASE===============================
   return (
     <Flex

@@ -4,7 +4,6 @@ import { dndItemsTypes } from "../utilities/dndItemsTypes";
 
 import { useMotionValue, Reorder, useDragControls } from "framer-motion";
 import { useRaisedShadow } from "../utilities/use-raised-shadow";
-import { ReorderIcon } from "./DraggableIcon";
 
 import {
   FaTrashRestoreAlt,
@@ -14,9 +13,10 @@ import {
   MdDragIndicator,
 } from "../utilities/icons";
 import { Projects } from "../pages/ProjectsList";
+import { SubTasks } from "../pages/Tasks";
 
 interface Props {
-  notationFor: Projects;
+  notationFor: Projects | SubTasks;
   nameWidth: string;
   children: React.ReactNode;
   width: string;
@@ -50,11 +50,11 @@ export const NotationPad = ({
     <Reorder.Item
       value={notationFor}
       id={notationID}
-      style={{ boxShadow, y }}
+      style={{ boxShadow, y, borderRadius: 10, listStyle: "none" }}
       // dragListener={false}
       dragControls={dragControls}
     >
-      <HStack gap={0} mr={0} mb={1} w={"100%"}>
+      <HStack gap={0} mr={0} mb={1} w={"100%"} borderLeftRadius={10}>
         <Flex
           bg={"orange.300"}
           h={10}

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   AddNotation as AddSubTask,
   NotationPad as SubTaskPad,
@@ -5,13 +6,14 @@ import {
 } from "../components/componentsList";
 import store from "../store/store";
 import {
-  selectAllSubTasks,
+  setSubTask,
   selectSubTasksOfTheCurrentTask,
   addSubTask,
   editSubTask,
   deleteSubTask,
   completeSubTask,
 } from "../store/subTasksReducer";
+import { Reorder } from "framer-motion";
 
 import { useSelector } from "react-redux";
 
@@ -23,6 +25,8 @@ const SubTasksList = ({ currentTaskID }: Props) => {
   const subTasksOfTheCurrentTask = useSelector(
     selectSubTasksOfTheCurrentTask(currentTaskID)
   );
+
+  const [subTasksList, setSubTasksList] = useState(subTasksOfTheCurrentTask);
 
   // =================================ADD=============================
   const addSubTaskToStore = (subTaskName: string) => {
@@ -43,7 +47,10 @@ const SubTasksList = ({ currentTaskID }: Props) => {
   const completeSubTaskOut = (id: string) => {
     store.dispatch(completeSubTask(id));
   };
-
+  // ==============================PROJECTS MOOVING ITEMS=====================
+  useEffect(() => {
+    store.dispatch(setSubTask(subTasksList));
+  }, [subTasksList]);
   // ==============================RENDER FASE=============================
   return (
     <>
@@ -52,32 +59,38 @@ const SubTasksList = ({ currentTaskID }: Props) => {
         placeHolder="Choose Sub Task"
         buttonName="Add"
       />
-      {subTasksOfTheCurrentTask.map((subTask, index) =>
-        subTask.isEditing ? (
-          <EditSubTask
-            key={index}
-            notationID={subTask.id}
-            notationName={subTask.subTaskName}
-            onEdit={editSubTaskOut}
-          />
-        ) : (
-          <SubTaskPad
-            moveItem={() => {}}
-            nameWidth={"350px"}
-            children={""}
-            width={"100%"}
-            onDelete={deleteSubTaskOut}
-            key={subTask.id}
-            index={index}
-            // moveItem={moveItem}
-            notationID={subTask.id}
-            notationName={subTask.subTaskName}
-            complited={subTask.complited}
-            onEdit={editSubTaskOut}
-            onComplete={completeSubTaskOut}
-          />
-        )
-      )}
+      <Reorder.Group
+        axis="y"
+        onReorder={setSubTasksList}
+        values={subTasksOfTheCurrentTask}
+      >
+        {subTasksOfTheCurrentTask.map((subTask, index) =>
+          subTask.isEditing ? (
+            <EditSubTask
+              key={index}
+              notationID={subTask.id}
+              notationName={subTask.subTaskName}
+              onEdit={editSubTaskOut}
+            />
+          ) : (
+            <SubTaskPad
+              notationFor={subTask}
+              nameWidth={"350px"}
+              children={""}
+              width={"100%"}
+              onDelete={deleteSubTaskOut}
+              key={subTask.id}
+              index={index}
+              // moveItem={moveItem}
+              notationID={subTask.id}
+              notationName={subTask.subTaskName}
+              complited={subTask.complited}
+              onEdit={editSubTaskOut}
+              onComplete={completeSubTaskOut}
+            />
+          )
+        )}
+      </Reorder.Group>
     </>
   );
 };
