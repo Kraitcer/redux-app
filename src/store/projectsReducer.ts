@@ -8,6 +8,10 @@ export type projectAction =
   | { type: "EDIT_PROJECT"; payload: { id: string; projectName: string } }
   | { type: "COMPLETE_PROJECT"; payload: string }
   | { type: "DELETE_PROJECT"; payload: string }
+  | {
+      type: "REORDER_PROJECTS";
+      payload: { sourceIndex: number; destinationIndex: number };
+    }
   | { type: "SET_PROJECTS"; payload: Projects[] };
 
 // =======================================ACTIONS============================
@@ -34,6 +38,13 @@ export const deleteProject = (id: string): projectAction => ({
   payload: id,
 });
 
+export const reorderProjects = (
+  sourceIndex: number,
+  destinationIndex: number
+): projectAction => ({
+  type: "REORDER_PROJECTS",
+  payload: { sourceIndex, destinationIndex },
+});
 export const setProjects = (projects: Projects[]): projectAction => ({
   type: "SET_PROJECTS",
   payload: projects,
@@ -82,6 +93,13 @@ export const projectsReducer = (
 
     case "DELETE_PROJECT":
       return state.filter((project) => project.id !== action.payload);
+    case "REORDER_PROJECTS":
+      const { sourceIndex, destinationIndex } = action.payload;
+      const items = Array.from(state);
+      const [reorderedItem] = items.splice(sourceIndex, 1);
+      items.splice(destinationIndex, 0, reorderedItem);
+      return [...items];
+
     case "SET_PROJECTS":
       return [...action.payload];
     default:

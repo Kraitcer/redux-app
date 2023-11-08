@@ -5,9 +5,11 @@ import {
   editProject,
   completeProject,
   deleteProject,
+  setProjects,
   selectAllProjects,
   selectCompletedProjects,
   selectActiveProjects,
+  reorderProjects,
 } from "../store/projectsReducer";
 
 import store from "../store/store";
@@ -96,13 +98,15 @@ const ProjectsList = () => {
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================
+  console.log();
   function handleOnDragEnd(result: DropResult) {
     if (!result.destination) return;
-
-    const items = Array.from(projects);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    store.dispatch({ type: "SET_PROJECTS", payload: items });
+    // const items = Array.from(projects);
+    // const [reorderedItem] = items.splice(result.source.index, 1);
+    // items.splice(result.destination.index, 0, reorderedItem);
+    store.dispatch(
+      reorderProjects(result.source.index, result.destination.index)
+    );
   }
   // ==============================RENDER FASE===============================
   return (
@@ -167,6 +171,7 @@ const ProjectsList = () => {
                         >
                           {(provided) => (
                             <li
+                              // key={project.id}
                               ref={provided.innerRef}
                               {...provided.draggableProps}
                               {...provided.dragHandleProps}
@@ -175,7 +180,7 @@ const ProjectsList = () => {
                                 nameWidth={"300px"}
                                 width={"100%"}
                                 onDelete={deleteProjectOut}
-                                key={project.id}
+                                // key={project.id}
                                 index={index}
                                 notationID={project.id}
                                 notationName={project.projectName}
