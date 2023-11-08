@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Flex, VStack, Heading } from "@chakra-ui/react";
 import {
   addProject,
@@ -13,12 +13,8 @@ import {
 } from "../store/projectsReducer";
 
 import store from "../store/store";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { Reorder } from "framer-motion";
+
 import {
   MdDone,
   MdOutlineNotificationsActive,
@@ -45,6 +41,8 @@ const ProjectsList = () => {
   const projects = useSelector(selectAllProjects);
   const completeProjects = useSelector(selectCompletedProjects);
   const activeProjects = useSelector(selectActiveProjects);
+
+  const [projectsList, setProjectsList] = useState(projects);
 
   const [renderFilter, setRenderFilter] = useState("all");
 
@@ -98,16 +96,16 @@ const ProjectsList = () => {
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================
-  console.log();
-  function handleOnDragEnd(result: DropResult) {
-    if (!result.destination) return;
-    // const items = Array.from(projects);
-    // const [reorderedItem] = items.splice(result.source.index, 1);
-    // items.splice(result.destination.index, 0, reorderedItem);
+  // console.log();
+  useEffect(() => {
     store.dispatch(
-      reorderProjects(result.source.index, result.destination.index)
+      setProjects(projectsList)
+      //   reorderProjects(result.source.index, result.destination.index)
     );
-  }
+  }, [projectsList]);
+  // store.dispatch(
+  //   reorderProjects(result.source.index, result.destination.index)
+  // );
   // ==============================RENDER FASE===============================
   return (
     <Flex
@@ -133,79 +131,58 @@ const ProjectsList = () => {
           placeHolder="Choose New Project"
           buttonName="Add"
         />
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-          <Flex w={"560px"} h={"34rem"} mb={0}>
-            <Flex
-              flexDirection={"column"}
-              overflowY={"auto"}
-              bg={"blue.100"}
-              w={"100%"}
-              h={"100%"}
-              borderTopRadius={20}
-              gap={2}
-              pl={3}
-              pr={3}
-              pt={3}
-              pb={2}
+        <Flex w={"560px"} h={"34rem"} mb={0}>
+          <Flex
+            flexDirection={"column"}
+            overflowY={"auto"}
+            bg={"blue.100"}
+            w={"100%"}
+            h={"100%"}
+            borderTopRadius={20}
+            gap={2}
+            pl={3}
+            pr={3}
+            pt={3}
+            pb={2}
+          >
+            <Reorder.Group
+              axis="y"
+              onReorder={setProjectsList}
+              values={projects}
             >
-              <Droppable droppableId="projects">
-                {(provided) => (
-                  <ul
-                    style={{ listStyleType: "none" }}
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                  >
-                    {visibleProjects.map((project, index) =>
-                      project.isEditing ? (
-                        <EditProject
-                          key={index}
-                          notationID={project.id}
-                          notationName={project.projectName}
-                          onEdit={editProjectOut}
-                        />
-                      ) : (
-                        <Draggable
-                          key={project.id}
-                          draggableId={project.id}
-                          index={index}
-                        >
-                          {(provided) => (
-                            <li
-                              // key={project.id}
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                            >
-                              <ProjectPad
-                                nameWidth={"300px"}
-                                width={"100%"}
-                                onDelete={deleteProjectOut}
-                                // key={project.id}
-                                index={index}
-                                notationID={project.id}
-                                notationName={project.projectName}
-                                complited={project.complited}
-                                onEdit={editProjectOut}
-                                onComplete={completeProjectOut}
-                                children={
-                                  <TasksBadge
-                                    currentProjectID={project.id}
-                                    currentProjectName={project.projectName}
-                                  />
-                                }
-                              />
-                            </li>
-                          )}
-                        </Draggable>
-                      )
-                    )}
-                    {provided.placeholder}
-                  </ul>
-                )}
-              </Droppable>
-            </Flex>
+              {visibleProjects.map((project, index) =>
+                project.isEditing ? (
+                  <EditProject
+                    key={index}
+                    notationID={project.id}
+                    notationName={project.projectName}
+                    onEdit={editProjectOut}
+                  />
+                ) : (
+                  <ProjectPad
+                    notationFor={project}
+                    nameWidth={"300px"}
+                    width={"100%"}
+                    onDelete={deleteProjectOut}
+                    key={project.id}
+                    index={index}
+                    notationID={project.id}
+                    notationName={project.projectName}
+                    complited={project.complited}
+                    onEdit={editProjectOut}
+                    onComplete={completeProjectOut}
+                    children={
+                      <TasksBadge
+                        currentProjectID={project.id}
+                        currentProjectName={project.projectName}
+                      />
+                    }
+                  />
+                )
+              )}
+            </Reorder.Group>
           </Flex>
-        </DragDropContext>
+        </Flex>
 
         <Flex
           bg={"blue.400"}
