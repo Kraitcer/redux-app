@@ -42,13 +42,9 @@ export interface SubTasks {
 
 const ProjectsTasks = React.memo(() => {
   let { state: currentProject } = useLocation();
-  // const [tasksStore, dispatch] = useReducer(tasksReducer, []);
 
   // ==============================TASK FILTER=========================
   const tasksStore = useSelector(selectAllTasks);
-  // const tasksOfTheCurrentProject = useSelector(
-  //   selectTasksOfTheCurrentProject(currentProject.id)
-  // );
   const queueTasks = useSelector(selectQueueTasks);
   const developmentTasks = useSelector(selectDevelopmentTasks);
   const doneTasks = useSelector(selectDoneTasks);
