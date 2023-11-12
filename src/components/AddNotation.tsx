@@ -11,7 +11,7 @@ interface Prop {
 export const AddNotation = ({ addTodo, placeHolder, buttonName }: Prop) => {
   const [value, setValue] = useState("");
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (value) {
       addTodo(value);

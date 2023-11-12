@@ -28,6 +28,8 @@ import {
 } from "../components/componentsList";
 import { useSelector } from "react-redux";
 import TasksBadge from "../components/badges/TasksBadge";
+import AllModal from "../components/AllModal";
+import FetusIndex from "../components/FetusIndex";
 
 export interface Projects {
   id: string;
@@ -75,7 +77,17 @@ const ProjectsList = () => {
     },
   ];
 
-  // =================================ADD=============================
+  // =================================MODAL============================
+  const [isOpen1, setIsOpen1] = useState(false);
+  const [newProject, setNewProject] = useState("");
+  const openModal = (newProjectName: string) => {
+    // const currentTask = tasksStore.filter((task) => task.id === id);
+    // setCurrentTask(currentTask[0]);
+    setNewProject(newProjectName);
+    setIsOpen1(true);
+  };
+
+  // =================================ADD==============================
   const addProjectToStore = (project: string) => {
     store.dispatch(addProject(project));
   };
@@ -101,103 +113,113 @@ const ProjectsList = () => {
   }, [projectsList]);
   // ==============================RENDER FASE===============================
   return (
-    <Flex
-      flexDirection={"column"}
-      justifyContent={"center"}
-      alignItems={"center"}
-      w={"100%"}
-    >
-      <Heading
-        fontSize={{ base: "4xl", sm: "5xl", md: "6xl" }}
-        fontWeight="bold"
-        textAlign="center"
-        textTransform={"uppercase"}
-        bgGradient="linear(to-l, #7928CA, #FF0080)"
-        bgClip="text"
-        mt={4}
+    <>
+      <AllModal
+        size={"xl"}
+        title={"Edit task"}
+        onOpen={isOpen1}
+        onClose={() => setIsOpen1(false)}
+        children={<FetusIndex newProjectName={newProject} />}
+      />
+      <Flex
+        flexDirection={"column"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        w={"100%"}
       >
-        Projects
-      </Heading>
-      <VStack gap={0} mt={6}>
-        <AddProject
-          addTodo={addProjectToStore}
-          placeHolder="Choose New Project"
-          buttonName="Add"
-        />
-        <Flex w={"560px"} h={"34rem"} mb={0}>
-          <Flex
-            flexDirection={"column"}
-            overflowY={"auto"}
-            bg={"blue.100"}
-            w={"100%"}
-            h={"100%"}
-            borderTopRadius={20}
-            gap={2}
-            pl={3}
-            pr={3}
-            pt={3}
-            pb={2}
-          >
-            <Reorder.Group
-              axis="y"
-              onReorder={setProjectsList}
-              values={projects}
-            >
-              {visibleProjects.map((project, index) =>
-                project.isEditing ? (
-                  <EditProject
-                    key={index}
-                    notationID={project.id}
-                    notationName={project.projectName}
-                    onEdit={editProjectOut}
-                  />
-                ) : (
-                  <ProjectPad
-                    notationFor={project}
-                    nameWidth={"300px"}
-                    width={"100%"}
-                    onDelete={deleteProjectOut}
-                    key={project.id}
-                    index={index}
-                    notationID={project.id}
-                    notationName={project.projectName}
-                    complited={project.complited}
-                    onEdit={editProjectOut}
-                    onComplete={completeProjectOut}
-                    children={
-                      <TasksBadge
-                        currentProjectID={project.id}
-                        currentProjectName={project.projectName}
-                      />
-                    }
-                  />
-                )
-              )}
-            </Reorder.Group>
-          </Flex>
-        </Flex>
-
-        <Flex
-          bg={"blue.400"}
-          w={"100%"}
-          h={16}
-          borderBottomRadius={20}
-          justifyContent={"center"}
-          alignItems={"center"}
-          gap={3}
+        <Heading
+          fontSize={{ base: "4xl", sm: "5xl", md: "6xl" }}
+          fontWeight="bold"
+          textAlign="center"
+          textTransform={"uppercase"}
+          bgGradient="linear(to-l, #7928CA, #FF0080)"
+          bgClip="text"
+          mt={4}
         >
-          {footerArray.map((footer, index) => (
-            <Footer
-              key={index}
-              onClick={() => setRenderFilter(footer.type)}
-              badge={footer.badge}
-              icon={footer.icon}
-              name={footer.type}
-            />
-          ))}
-        </Flex>
-      </VStack>
-    </Flex>
+          Projects
+        </Heading>
+        <VStack gap={0} mt={6}>
+          <AddProject
+            addTodo={openModal}
+            // addTodo={addProjectToStore}
+            placeHolder="Choose New Project"
+            buttonName="Add"
+          />
+          <Flex w={"560px"} h={"34rem"} mb={0}>
+            <Flex
+              flexDirection={"column"}
+              overflowY={"auto"}
+              bg={"blue.100"}
+              w={"100%"}
+              h={"100%"}
+              borderTopRadius={20}
+              gap={2}
+              pl={3}
+              pr={3}
+              pt={3}
+              pb={2}
+            >
+              <Reorder.Group
+                // axis={"y"}
+                onReorder={setProjectsList}
+                values={projects}
+              >
+                {visibleProjects.map((project, index) =>
+                  project.isEditing ? (
+                    <EditProject
+                      key={index}
+                      notationID={project.id}
+                      notationName={project.projectName}
+                      onEdit={editProjectOut}
+                    />
+                  ) : (
+                    <ProjectPad
+                      notationFor={project}
+                      nameWidth={"300px"}
+                      width={"100%"}
+                      onDelete={deleteProjectOut}
+                      key={project.id}
+                      index={index}
+                      notationID={project.id}
+                      notationName={project.projectName}
+                      complited={project.complited}
+                      onEdit={editProjectOut}
+                      onComplete={completeProjectOut}
+                      children={
+                        <TasksBadge
+                          currentProjectID={project.id}
+                          currentProjectName={project.projectName}
+                        />
+                      }
+                    />
+                  )
+                )}
+              </Reorder.Group>
+            </Flex>
+          </Flex>
+
+          <Flex
+            bg={"blue.400"}
+            w={"100%"}
+            h={16}
+            borderBottomRadius={20}
+            justifyContent={"center"}
+            alignItems={"center"}
+            gap={3}
+          >
+            {footerArray.map((footer, index) => (
+              <Footer
+                key={index}
+                onClick={() => setRenderFilter(footer.type)}
+                badge={footer.badge}
+                icon={footer.icon}
+                name={footer.type}
+              />
+            ))}
+          </Flex>
+        </VStack>
+      </Flex>
+    </>
   );
 };
 

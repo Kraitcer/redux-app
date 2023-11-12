@@ -52,7 +52,8 @@ const TasksBadge = ({ currentProjectID, currentProjectName }: Props) => {
       _hover={{ bg: "white", color: "black" }}
       p={0.5}
       borderRadius={50}
-      mr={1}
+      justifyContent={"right"}
+      // mr={1}
       onClick={() =>
         navigate("/projectstaskbord", {
           state: {
