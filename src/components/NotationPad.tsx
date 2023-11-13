@@ -1,6 +1,4 @@
 import { Text, Box, Flex, HStack } from "@chakra-ui/react";
-import { useDrag, useDrop } from "react-dnd";
-import { dndItemsTypes } from "../utilities/dndItemsTypes";
 
 import { useMotionValue, Reorder, useDragControls } from "framer-motion";
 import { useRaisedShadow } from "../utilities/use-raised-shadow";
@@ -67,7 +65,6 @@ export const NotationPad = ({
           alignItems={"center"}
           cursor={"-webkit-grab"}
         >
-          {/* <ReorderIcon dragControls={dragControls} /> */}
           <MdDragIndicator
             size={"20px"}
             onPointerDown={(event) => dragControls.start(event)}
