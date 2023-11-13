@@ -26,7 +26,7 @@ const FetusIndex = ({ newProjectName }: Props) => {
           <Thead>
             <Tr bg={"blue.400"} color={"white"}>
               <Th color={"white"} textAlign={"center"}>
-                Projects
+                Project
               </Th>
               <Th
                 //   borderRight={"1px"}
