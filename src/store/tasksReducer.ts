@@ -1,6 +1,7 @@
 import { Tasks, TasksStatus } from "../pages/Tasks";
 import { createSelector } from "reselect";
 import { v4 } from "uuid";
+import { Projects } from "../pages/ProjectsList";
 
 // ===============================ACTION TYPES=========================
 type TaskAction =
@@ -28,9 +29,15 @@ type TaskAction =
       };
     }
   // | { type: "COMPLETE_TASK"; payload: string }
-  | { type: "REORDER_QUEUE_TASKS"; payload: Tasks[] }
-  | { type: "REORDER_DEVELOPMENT_TASKS"; payload: Tasks[] }
-  | { type: "REORDER_DONE_TASKS"; payload: Tasks[] }
+  | {
+      type: "REORDER_TASKS";
+      payload: {
+        queueTasks: Tasks[];
+        developmentTasks: Tasks[];
+        doneTasks: Tasks[];
+        currentProjectID: string;
+      };
+    }
   | { type: "SET_TASKS"; payload: Tasks[] };
 
 // =======================================ACTIONS============================
@@ -75,17 +82,14 @@ export const setTask = (task: Tasks[]): TaskAction => ({
   type: "SET_TASKS",
   payload: task,
 });
-export const reorderQueueTasks = (tasks: Tasks[]): TaskAction => ({
-  type: "REORDER_QUEUE_TASKS",
-  payload: tasks,
-});
-export const reorderDevelopmentTasks = (tasks: Tasks[]): TaskAction => ({
-  type: "REORDER_DEVELOPMENT_TASKS",
-  payload: tasks,
-});
-export const reorderDoneTasks = (tasks: Tasks[]): TaskAction => ({
-  type: "REORDER_DONE_TASKS",
-  payload: tasks,
+export const reorderTasks = (
+  queueTasks: Tasks[],
+  developmentTasks: Tasks[],
+  doneTasks: Tasks[],
+  currentProjectID: string
+): TaskAction => ({
+  type: "REORDER_TASKS",
+  payload: { queueTasks, developmentTasks, doneTasks, currentProjectID },
 });
 
 // ===============================REDUCER=========================
@@ -125,17 +129,18 @@ export const tasksReducer = (
       );
     case "SET_TASKS":
       return [...action.payload];
-    case "REORDER_QUEUE_TASKS":
-      const noQueueTasks = state.filter((task) => task.status !== "queue");
-      return [...noQueueTasks, ...action.payload];
-    case "REORDER_DEVELOPMENT_TASKS":
-      const noDevelopmentTasks = state.filter(
-        (task) => task.status !== "development"
+    case "REORDER_TASKS":
+      const otherTasks = state.filter(
+        (task) =>
+          // task.status !== "done" &&
+          task.currentProjectID !== action.payload.currentProjectID
       );
-      return [...noDevelopmentTasks, ...action.payload];
-    case "REORDER_DONE_TASKS":
-      const noDoneTasks = state.filter((task) => task.status !== "done");
-      return [...noDoneTasks, ...action.payload];
+      return [
+        ...otherTasks,
+        ...action.payload.queueTasks,
+        ...action.payload.developmentTasks,
+        ...action.payload.doneTasks,
+      ];
     default:
       return state;
   }

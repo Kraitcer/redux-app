@@ -1,10 +1,11 @@
 import { Flex, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { useLocation } from "react-router-dom";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import Column from "../components/Column";
 import AllModal from "../components/AllModal";
 import EditTask from "../components/EditTask";
+import TaskPad from "../components/TaskPad";
 import {
   addTask,
   editTask,
@@ -13,17 +14,12 @@ import {
   selectQueueTasks,
   selectDevelopmentTasks,
   selectDoneTasks,
-  reorderQueueTasks,
-  reorderDevelopmentTasks,
-  reorderDoneTasks,
+  reorderTasks,
   setTask,
 } from "../store/tasksReducer";
 import store from "../store/store";
 import { useSelector } from "react-redux";
 import { Reorder } from "framer-motion";
-
-import React, { useEffect } from "react";
-import TaskPad from "../components/TaskPad";
 
 export interface TasksStatus {
   status: "queue" | "development" | "done";
@@ -51,9 +47,15 @@ const ProjectsTasks = () => {
 
   // ==============================TASK FILTER=========================
   const tasksStore = useSelector(selectAllTasks);
-  const queueTasks = useSelector(selectQueueTasks);
-  const developmentTasks = useSelector(selectDevelopmentTasks);
-  const doneTasks = useSelector(selectDoneTasks);
+  const queueTasks = useSelector(selectQueueTasks).filter(
+    (task) => task.currentProjectID === currentProject.projectID
+  );
+  const developmentTasks = useSelector(selectDevelopmentTasks).filter(
+    (task) => task.currentProjectID === currentProject.projectID
+  );
+  const doneTasks = useSelector(selectDoneTasks).filter(
+    (task) => task.currentProjectID === currentProject.projectID
+  );
 
   // ==============================DnD FUNCTIONALITY===================
   const [queueTasksList, setQueueTasksList] = useState<Tasks[]>(queueTasks);
@@ -73,27 +75,21 @@ const ProjectsTasks = () => {
       id: 1,
       status: "queue",
       columntColor: "green.200",
-      tasks: queueTasks.filter(
-        (task) => task.currentProjectID === currentProject.projectID
-      ),
+      tasks: queueTasks,
       setTasks: setQueueTasksList,
     },
     {
       id: 2,
       status: "development",
       columntColor: "purple.200",
-      tasks: developmentTasks.filter(
-        (task) => task.currentProjectID === currentProject.projectID
-      ),
+      tasks: developmentTasks,
       setTasks: setDevelopmentTasks,
     },
     {
       id: 3,
       status: "done",
       columntColor: "pink.200",
-      tasks: doneTasks.filter(
-        (task) => task.currentProjectID === currentProject.projectID
-      ),
+      tasks: doneTasks,
       setTasks: setDoneTasksList,
     },
   ];
@@ -139,14 +135,15 @@ const ProjectsTasks = () => {
   };
   //==================================REORDER TASKS========================
   useEffect(() => {
-    store.dispatch(reorderQueueTasks(queueTasksList));
-  }, [queueTasksList]);
-  useEffect(() => {
-    store.dispatch(reorderDevelopmentTasks(developmentTasksList));
-  }, [developmentTasksList]);
-  useEffect(() => {
-    store.dispatch(reorderDoneTasks(doneTasksList));
-  }, [doneTasksList]);
+    store.dispatch(
+      reorderTasks(
+        queueTasksList,
+        developmentTasksList,
+        doneTasksList,
+        currentProject.projectID
+      )
+    );
+  }, [queueTasksList, developmentTasksList, doneTasksList]);
   // ==============================RENDER FASE===============================
 
   return (
@@ -187,7 +184,7 @@ const ProjectsTasks = () => {
               <Reorder.Group
                 onReorder={col.setTasks}
                 values={col.tasks}
-                key={col.id}
+                // key={col.id}
               >
                 <Column
                   key={col.id}
