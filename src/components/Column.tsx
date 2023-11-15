@@ -7,13 +7,14 @@ import React from "react";
 
 interface ColumnProps {
   today?: DateTime;
-  tasks: Tasks[];
+  // tasks: Tasks[];
+  tasks: React.ReactNode;
   currentProjectID: string;
   columntName: TasksStatus["status"];
   columntColor: string;
   addTask: () => void;
-  onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
+  // onDelete: (id: string) => void;
+  // onEdit: (id: string) => void;
 }
 
 const Column = React.memo(
@@ -23,15 +24,16 @@ const Column = React.memo(
     columntName,
     columntColor,
     addTask,
-    onDelete,
-    onEdit,
-  }: ColumnProps) => {
+  }: // onDelete,
+  // onEdit,
+  ColumnProps) => {
     return (
       <>
         <Flex
           w={"560px"}
-          h={{ base: "160px", md: "auto" }}
-          overflowY={"auto"}
+          // h={{ base: "160px", md: "auto" }}
+          h={700}
+          // overflowY={"auto"}
           borderRadius={20}
           bg={columntColor}
           flexDirection={"column"}
@@ -53,21 +55,14 @@ const Column = React.memo(
             </Button>
           </Flex>
           <Flex
-            overflowY={"auto"}
+            // overflowY={"auto"}
             w={"530px"}
             h={"100%"}
             flexDirection={{ base: "row", md: "column" }}
+            // flexDirection={{ base: "row", md: "column" }}
             gap={3}
           >
-            {tasks.map((task, index) => (
-              <TaskPad
-                // today={today}
-                task={task}
-                onDelete={() => onDelete(task.id)}
-                onEdit={(id) => onEdit(id)}
-                key={index}
-              />
-            ))}
+            {tasks}
           </Flex>
         </Flex>
       </>

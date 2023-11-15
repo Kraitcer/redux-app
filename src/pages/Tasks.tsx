@@ -1,7 +1,7 @@
 import { Flex, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
 import { DateTime } from "luxon";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import Column from "../components/Column";
 import AllModal from "../components/AllModal";
 import EditTask from "../components/EditTask";
@@ -13,11 +13,17 @@ import {
   selectQueueTasks,
   selectDevelopmentTasks,
   selectDoneTasks,
+  reorderQueueTasks,
+  reorderDevelopmentTasks,
+  reorderDoneTasks,
+  setTask,
 } from "../store/tasksReducer";
 import store from "../store/store";
 import { useSelector } from "react-redux";
+import { Reorder } from "framer-motion";
 
-import React from "react";
+import React, { useEffect } from "react";
+import TaskPad from "../components/TaskPad";
 
 export interface TasksStatus {
   status: "queue" | "development" | "done";
@@ -40,7 +46,7 @@ export interface SubTasks {
   complited: boolean;
 }
 
-const ProjectsTasks = React.memo(() => {
+const ProjectsTasks = () => {
   let { state: currentProject } = useLocation();
 
   // ==============================TASK FILTER=========================
@@ -48,19 +54,48 @@ const ProjectsTasks = React.memo(() => {
   const queueTasks = useSelector(selectQueueTasks);
   const developmentTasks = useSelector(selectDevelopmentTasks);
   const doneTasks = useSelector(selectDoneTasks);
+
+  // ==============================DnD FUNCTIONALITY===================
+  const [queueTasksList, setQueueTasksList] = useState<Tasks[]>(queueTasks);
+  const [developmentTasksList, setDevelopmentTasks] =
+    useState<Tasks[]>(developmentTasks);
+  const [doneTasksList, setDoneTasksList] = useState<Tasks[]>(doneTasks);
+
   // ==============================COLUMNS=============================
   const columnsArray: {
+    id: number;
     status: TasksStatus["status"];
     columntColor: string;
     tasks: Tasks[];
+    setTasks: Dispatch<SetStateAction<Tasks[]>>;
   }[] = [
-    { status: "queue", columntColor: "green.200", tasks: queueTasks },
     {
+      id: 1,
+      status: "queue",
+      columntColor: "green.200",
+      tasks: queueTasks.filter(
+        (task) => task.currentProjectID === currentProject.projectID
+      ),
+      setTasks: setQueueTasksList,
+    },
+    {
+      id: 2,
       status: "development",
       columntColor: "purple.200",
-      tasks: developmentTasks,
+      tasks: developmentTasks.filter(
+        (task) => task.currentProjectID === currentProject.projectID
+      ),
+      setTasks: setDevelopmentTasks,
     },
-    { status: "done", columntColor: "pink.200", tasks: doneTasks },
+    {
+      id: 3,
+      status: "done",
+      columntColor: "pink.200",
+      tasks: doneTasks.filter(
+        (task) => task.currentProjectID === currentProject.projectID
+      ),
+      setTasks: setDoneTasksList,
+    },
   ];
 
   // ==============================MODAL=============================
@@ -102,7 +137,16 @@ const ProjectsTasks = React.memo(() => {
   ) => {
     store.dispatch(editTask(id, taskName, description, status, dueDate));
   };
-
+  //==================================REORDER TASKS========================
+  useEffect(() => {
+    store.dispatch(reorderQueueTasks(queueTasksList));
+  }, [queueTasksList]);
+  useEffect(() => {
+    store.dispatch(reorderDevelopmentTasks(developmentTasksList));
+  }, [developmentTasksList]);
+  useEffect(() => {
+    store.dispatch(reorderDoneTasks(doneTasksList));
+  }, [doneTasksList]);
   // ==============================RENDER FASE===============================
 
   return (
@@ -133,27 +177,40 @@ const ProjectsTasks = React.memo(() => {
           {currentProject.projectName}
         </Heading>
         <Flex bg={"blue.100"} borderRadius={20} p={4}>
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 4 }}>
-            {columnsArray.map((column, index) => (
-              <Column
-                key={index}
-                onEdit={openModal}
-                onDelete={onDelete}
-                // today={today}
-                tasks={column.tasks.filter(
-                  (task) => task.currentProjectID === currentProject.projectID
-                )}
-                addTask={() => addTaskToStore(column.status)}
-                currentProjectID={currentProject.projectID}
-                columntName={column.status}
-                columntColor={column.columntColor}
-              />
+          <SimpleGrid
+            display={"flex"}
+            gap={3}
+            // columns={{ base: 1, md: 3 }}
+            // spacing={{ base: 4, md: 4 }}
+          >
+            {columnsArray.map((col) => (
+              <Reorder.Group
+                onReorder={col.setTasks}
+                values={col.tasks}
+                key={col.id}
+              >
+                <Column
+                  key={col.id}
+                  addTask={() => addTaskToStore(col.status)}
+                  currentProjectID={currentProject.projectID}
+                  columntName={col.status}
+                  columntColor={col.columntColor}
+                  tasks={col.tasks.map((task) => (
+                    <TaskPad
+                      key={task.id}
+                      task={task}
+                      onDelete={() => onDelete(task.id)}
+                      onEdit={openModal}
+                    />
+                  ))}
+                />
+              </Reorder.Group>
             ))}
           </SimpleGrid>
         </Flex>
       </VStack>
     </>
   );
-});
+};
 
 export default ProjectsTasks;

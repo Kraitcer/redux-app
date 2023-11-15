@@ -28,6 +28,9 @@ type TaskAction =
       };
     }
   // | { type: "COMPLETE_TASK"; payload: string }
+  | { type: "REORDER_QUEUE_TASKS"; payload: Tasks[] }
+  | { type: "REORDER_DEVELOPMENT_TASKS"; payload: Tasks[] }
+  | { type: "REORDER_DONE_TASKS"; payload: Tasks[] }
   | { type: "SET_TASKS"; payload: Tasks[] };
 
 // =======================================ACTIONS============================
@@ -72,6 +75,18 @@ export const setTask = (task: Tasks[]): TaskAction => ({
   type: "SET_TASKS",
   payload: task,
 });
+export const reorderQueueTasks = (tasks: Tasks[]): TaskAction => ({
+  type: "REORDER_QUEUE_TASKS",
+  payload: tasks,
+});
+export const reorderDevelopmentTasks = (tasks: Tasks[]): TaskAction => ({
+  type: "REORDER_DEVELOPMENT_TASKS",
+  payload: tasks,
+});
+export const reorderDoneTasks = (tasks: Tasks[]): TaskAction => ({
+  type: "REORDER_DONE_TASKS",
+  payload: tasks,
+});
 
 // ===============================REDUCER=========================
 
@@ -110,6 +125,17 @@ export const tasksReducer = (
       );
     case "SET_TASKS":
       return [...action.payload];
+    case "REORDER_QUEUE_TASKS":
+      const noQueueTasks = state.filter((task) => task.status !== "queue");
+      return [...noQueueTasks, ...action.payload];
+    case "REORDER_DEVELOPMENT_TASKS":
+      const noDevelopmentTasks = state.filter(
+        (task) => task.status !== "development"
+      );
+      return [...noDevelopmentTasks, ...action.payload];
+    case "REORDER_DONE_TASKS":
+      const noDoneTasks = state.filter((task) => task.status !== "done");
+      return [...noDoneTasks, ...action.payload];
     default:
       return state;
   }

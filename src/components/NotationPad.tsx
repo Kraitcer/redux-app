@@ -76,8 +76,8 @@ export const NotationPad = ({
           w={width}
           h={10}
           display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
+          justifyContent={"space-between"}
+          // alignItems={"center"}
           cursor={"pointer"}
         >
           <Flex justifyContent={"space-between"} alignItems={"center"}>
