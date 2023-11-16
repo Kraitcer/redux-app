@@ -4,7 +4,12 @@ import TimeLeftBadge from "./badges/TimeLeftBadge";
 import { Tasks } from "../pages/Tasks";
 import React from "react";
 import ActiveSubTaskBadge from "././badges/ActiveSubTaskBadge";
-import { Reorder, useDragControls, useMotionValue } from "framer-motion";
+import {
+  Reorder,
+  useDragControls,
+  useMotionValue,
+  motion,
+} from "framer-motion";
 import { useRaisedShadow } from "../utilities/use-raised-shadow";
 import { Info } from "luxon";
 
