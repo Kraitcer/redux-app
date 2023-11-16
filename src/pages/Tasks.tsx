@@ -1,7 +1,20 @@
 import { Flex, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { DateTime } from "luxon";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
+import { v4 } from "uuid";
+
 import Column from "../components/Column";
 import AllModal from "../components/AllModal";
 import EditTask from "../components/EditTask";
@@ -18,6 +31,7 @@ import store from "../store/store";
 import { useSelector } from "react-redux";
 
 import React from "react";
+import TaskPad from "../components/TaskPad";
 
 export interface TasksStatus {
   status: "queue" | "development" | "done";
@@ -45,9 +59,15 @@ const ProjectsTasks = React.memo(() => {
 
   // ==============================TASK FILTER=========================
   const tasksStore = useSelector(selectAllTasks);
-  const queueTasks = useSelector(selectQueueTasks);
-  const developmentTasks = useSelector(selectDevelopmentTasks);
-  const doneTasks = useSelector(selectDoneTasks);
+  const queueTasks = useSelector(selectQueueTasks).filter(
+    (task) => task.currentProjectID === currentProject.projectID
+  );
+  const developmentTasks = useSelector(selectDevelopmentTasks).filter(
+    (task) => task.currentProjectID === currentProject.projectID
+  );
+  const doneTasks = useSelector(selectDoneTasks).filter(
+    (task) => task.currentProjectID === currentProject.projectID
+  );
   // ==============================COLUMNS=============================
   const columnsArray: {
     status: TasksStatus["status"];
@@ -103,6 +123,10 @@ const ProjectsTasks = React.memo(() => {
     store.dispatch(editTask(id, taskName, description, status, dueDate));
   };
 
+  // ==============================DND FUNCTIONALITY=========================
+  // const { isOver, setNodeRef } = useDroppable({
+  //   id: "droppable",
+  // });
   // ==============================RENDER FASE===============================
 
   return (
@@ -134,21 +158,25 @@ const ProjectsTasks = React.memo(() => {
         </Heading>
         <Flex bg={"blue.100"} borderRadius={20} p={4}>
           <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 4 }}>
-            {columnsArray.map((column, index) => (
-              <Column
-                key={index}
-                onEdit={openModal}
-                onDelete={onDelete}
-                // today={today}
-                tasks={column.tasks.filter(
-                  (task) => task.currentProjectID === currentProject.projectID
-                )}
-                addTask={() => addTaskToStore(column.status)}
-                currentProjectID={currentProject.projectID}
-                columntName={column.status}
-                columntColor={column.columntColor}
-              />
-            ))}
+            <DndContext>
+              {columnsArray.map((column, index) => (
+                <Column
+                  key={index}
+                  tasks={column.tasks.map((task, index) => (
+                    <TaskPad
+                      task={task}
+                      onDelete={() => onDelete(task.id)}
+                      onEdit={(id) => openModal(id)}
+                      key={index}
+                    />
+                  ))}
+                  addTask={() => addTaskToStore(column.status)}
+                  currentProjectID={currentProject.projectID}
+                  columntName={column.status}
+                  columntColor={column.columntColor}
+                />
+              ))}
+            </DndContext>
           </SimpleGrid>
         </Flex>
       </VStack>

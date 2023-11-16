@@ -1,31 +1,17 @@
 import { Flex, Text, Button, Badge } from "@chakra-ui/react";
-
-import TaskPad from "./TaskPad";
-import { Tasks, TasksStatus } from "../pages/Tasks";
-import { DateTime } from "luxon";
+import { TasksStatus } from "../pages/Tasks";
 import React from "react";
 
 interface ColumnProps {
-  today?: DateTime;
-  tasks: Tasks[];
+  tasks: React.ReactNode;
   currentProjectID: string;
   columntName: TasksStatus["status"];
   columntColor: string;
   addTask: () => void;
-  onDelete: (id: string) => void;
-  onEdit: (id: string) => void;
 }
 
 const Column = React.memo(
-  ({
-    today,
-    tasks,
-    columntName,
-    columntColor,
-    addTask,
-    onDelete,
-    onEdit,
-  }: ColumnProps) => {
+  ({ tasks, columntName, columntColor, addTask }: ColumnProps) => {
     return (
       <>
         <Flex
@@ -59,15 +45,7 @@ const Column = React.memo(
             flexDirection={{ base: "row", md: "column" }}
             gap={3}
           >
-            {tasks.map((task, index) => (
-              <TaskPad
-                // today={today}
-                task={task}
-                onDelete={() => onDelete(task.id)}
-                onEdit={(id) => onEdit(id)}
-                key={index}
-              />
-            ))}
+            {tasks}
           </Flex>
         </Flex>
       </>
