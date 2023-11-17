@@ -1,8 +1,10 @@
 import { Flex, Text, Box, HStack } from "@chakra-ui/react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { IoTrashBinSharp, BiEdit, MdDragIndicator } from "../utilities/icons";
 import TimeLeftBadge from "./badges/TimeLeftBadge";
 import { Tasks } from "../pages/Tasks";
-import React from "react";
+import React, { useState } from "react";
 import ActiveSubTaskBadge from "././badges/ActiveSubTaskBadge";
 
 interface Prop {
@@ -13,8 +15,48 @@ interface Prop {
 }
 
 const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
+  const [mouseIsOver, setMouseIsOver] = useState(false);
+  // const [editMode, setEditMode] = useState(true);
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: task.id,
+    data: {
+      type: "Task",
+      task,
+    },
+    // disabled: editMode,
+  });
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
+  // const toggleEditMode = () => {
+  //   setEditMode((prev) => !prev);
+  //   setMouseIsOver(false);
+  // };
   return (
-    <HStack gap={0} mr={0} h={16}>
+    <HStack
+      gap={0}
+      mr={0}
+      h={16}
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      // onClick={toggleEditMode}
+      // onMouseEnter={() => {
+      //   setMouseIsOver(true);
+      // }}
+      // onMouseLeave={() => {
+      //   setMouseIsOver(false);
+      // }}
+    >
       <Flex
         bg={"orange.300"}
         h={"100%"}

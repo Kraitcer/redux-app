@@ -1,17 +1,36 @@
 import { Flex, Text, Button, Badge } from "@chakra-ui/react";
-import { TasksStatus } from "../pages/Tasks";
-import React from "react";
+
+import TaskPad from "./TaskPad";
+import { Tasks, TasksStatus } from "../pages/Tasks";
+import { DateTime } from "luxon";
+import React, { useMemo } from "react";
+import { SortableContext } from "@dnd-kit/sortable";
 
 interface ColumnProps {
-  tasks: React.ReactNode;
+  today?: DateTime;
+  tasks: Tasks[];
   currentProjectID: string;
   columntName: TasksStatus["status"];
   columntColor: string;
   addTask: () => void;
+  onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
 }
 
 const Column = React.memo(
-  ({ tasks, columntName, columntColor, addTask }: ColumnProps) => {
+  ({
+    today,
+    tasks,
+    columntName,
+    columntColor,
+    addTask,
+    onDelete,
+    onEdit,
+  }: ColumnProps) => {
+    const tasksIds = useMemo(() => {
+      return tasks.map((task) => task.id);
+    }, [tasks]);
+
     return (
       <>
         <Flex
@@ -45,7 +64,17 @@ const Column = React.memo(
             flexDirection={{ base: "row", md: "column" }}
             gap={3}
           >
-            {tasks}
+            <SortableContext items={tasksIds}>
+              {tasks.map((task, index) => (
+                <TaskPad
+                  // today={today}
+                  task={task}
+                  onDelete={() => onDelete(task.id)}
+                  onEdit={(id) => onEdit(id)}
+                  key={index}
+                />
+              ))}
+            </SortableContext>
           </Flex>
         </Flex>
       </>
