@@ -1,5 +1,14 @@
 import { Flex, Text, Button, Badge } from "@chakra-ui/react";
-
+import {
+  DndContext,
+  DragEndEvent,
+  DragOverEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import TaskPad from "./TaskPad";
 import { Tasks, TasksStatus } from "../pages/Tasks";
 import { DateTime } from "luxon";
@@ -37,12 +46,14 @@ const Column = React.memo(
           w={"560px"}
           h={{ base: "160px", md: "auto" }}
           overflowY={"auto"}
+          // overflowX={"hidden"}
           borderRadius={20}
           bg={columntColor}
           flexDirection={"column"}
           alignItems={"center"}
           p={3}
           gap={3}
+          // px={20}
         >
           <Flex w={"100%"} gap={4} alignItems={"center"}>
             <Badge borderRadius={50} p={1}>
@@ -58,20 +69,20 @@ const Column = React.memo(
             </Button>
           </Flex>
           <Flex
-            overflowY={"auto"}
+            // overflowY={"auto"}
             w={"530px"}
             h={"100%"}
             flexDirection={{ base: "row", md: "column" }}
             gap={3}
           >
             <SortableContext items={tasksIds}>
-              {tasks.map((task, index) => (
+              {tasks.map((task) => (
                 <TaskPad
                   // today={today}
                   task={task}
                   onDelete={() => onDelete(task.id)}
                   onEdit={(id) => onEdit(id)}
-                  key={index}
+                  key={task.id}
                 />
               ))}
             </SortableContext>

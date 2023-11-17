@@ -28,7 +28,7 @@ type TaskAction =
       };
     }
   // | { type: "COMPLETE_TASK"; payload: string }
-  | { type: "SET_TASKS"; payload: Tasks[] };
+  | { type: "SET_TASKS"; payload: { task: Tasks[]; currentProjectID: string } };
 
 // =======================================ACTIONS============================
 export const addTask = (
@@ -68,9 +68,12 @@ export const deleteTask = (id: string): TaskAction => ({
   payload: id,
 });
 
-export const setTask = (task: Tasks[]): TaskAction => ({
+export const setTask = (
+  task: Tasks[],
+  currentProjectID: string
+): TaskAction => ({
   type: "SET_TASKS",
-  payload: task,
+  payload: { task, currentProjectID },
 });
 
 // ===============================REDUCER=========================
@@ -109,7 +112,10 @@ export const tasksReducer = (
           : task
       );
     case "SET_TASKS":
-      return [...action.payload];
+      const otherTasks = state.filter(
+        (task) => task.currentProjectID !== action.payload.currentProjectID
+      );
+      return [...otherTasks, ...action.payload.task];
     default:
       return state;
   }

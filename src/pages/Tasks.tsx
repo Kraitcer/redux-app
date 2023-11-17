@@ -9,10 +9,13 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { createPortal } from "react-dom";
+import TaskPad from "../components/TaskPad";
+
 import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { DateTime } from "luxon";
 import { useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 } from "uuid";
 
 import Column from "../components/Column";
@@ -23,10 +26,8 @@ import {
   editTask,
   deleteTask,
   selectAllTasks,
-  selectQueueTasks,
-  selectDevelopmentTasks,
-  selectDoneTasks,
   selectTasksOfTheCurrentProject,
+  setTask,
 } from "../store/tasksReducer";
 import store from "../store/store";
 import { useSelector } from "react-redux";
@@ -208,19 +209,24 @@ const ProjectsTasks = React.memo(() => {
       });
     }
 
-    const isOverAColumn = over.data.current?.type === "Column";
+    // const isOverAColumn = over.data.current?.type === "Column";
 
     // Im dropping a Task over a column
-    if (isActiveATask && isOverAColumn) {
+    // if (isActiveATask && isOverAColumn) {
+    if (isActiveATask) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
 
         // tasks[activeIndex].id = overId;
-        console.log("DROPPING TASK OVER COLUMN", { activeIndex });
+        // console.log("DROPPING TASK OVER COLUMN", { activeIndex });
         return arrayMove(tasks, activeIndex, activeIndex);
       });
     }
   }
+  useEffect(() => {
+    store.dispatch(setTask(tasks, currentProject.projectID));
+  }, [tasks]);
+
   // ==============================RENDER FASE===============================
 
   return (
@@ -272,6 +278,20 @@ const ProjectsTasks = React.memo(() => {
                   columntColor={column.columntColor}
                 />
               ))}
+              {createPortal(
+                <DragOverlay>
+                  {activeTask && (
+                    // <Flex bg={"blue.100"} w={"100%"} />
+                    <TaskPad
+                      task={activeTask}
+                      onDelete={() => onDelete(activeTask.id)}
+                      onEdit={openModal}
+                      key={activeTask.id}
+                    />
+                  )}
+                </DragOverlay>,
+                document.body
+              )}
             </DndContext>
           </SimpleGrid>
         </Flex>

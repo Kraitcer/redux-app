@@ -36,10 +36,21 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
     transition,
     transform: CSS.Transform.toString(transform),
   };
-  // const toggleEditMode = () => {
-  //   setEditMode((prev) => !prev);
-  //   setMouseIsOver(false);
-  // };
+  if (isDragging) {
+    return (
+      <HStack
+        border={"3px dotted"}
+        borderColor={"blue.300"}
+        bg={"blue.100"}
+        borderRadius={10}
+        h={16}
+        w={"100%"}
+        ref={setNodeRef}
+        style={style}
+        opacity={0.7}
+      />
+    );
+  }
   return (
     <HStack
       gap={0}
@@ -49,13 +60,6 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
       style={style}
       {...attributes}
       {...listeners}
-      // onClick={toggleEditMode}
-      // onMouseEnter={() => {
-      //   setMouseIsOver(true);
-      // }}
-      // onMouseLeave={() => {
-      //   setMouseIsOver(false);
-      // }}
     >
       <Flex
         bg={"orange.300"}
