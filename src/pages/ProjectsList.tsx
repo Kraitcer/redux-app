@@ -9,7 +9,6 @@ import {
   selectAllProjects,
   selectCompletedProjects,
   selectActiveProjects,
-  reorderProjects,
 } from "../store/projectsReducer";
 
 import store from "../store/store";

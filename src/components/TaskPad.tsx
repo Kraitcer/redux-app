@@ -15,8 +15,6 @@ interface Prop {
 }
 
 const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
-  const [mouseIsOver, setMouseIsOver] = useState(false);
-  // const [editMode, setEditMode] = useState(true);
   const {
     setNodeRef,
     attributes,
@@ -31,7 +29,6 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
       type: "Task",
       task,
     },
-    // disabled: editMode,
   });
   const style = {
     transition,
@@ -45,7 +42,7 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
         bg={"blue.100"}
         borderRadius={10}
         h={16}
-        w={"100%"}
+        w={"530px"}
         ref={setNodeRef}
         style={style}
         opacity={0.7}
@@ -54,6 +51,7 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
   }
   return (
     <HStack
+      w={"530px"}
       gap={0}
       mr={0}
       h={16}

@@ -37,14 +37,7 @@ const Column = React.memo(
     onDelete,
     onEdit,
   }: ColumnProps) => {
-    const {
-      setNodeRef,
-      attributes,
-      listeners,
-      transform,
-      transition,
-      isDragging,
-    } = useSortable({
+    const { setNodeRef } = useSortable({
       id: columntName as TasksStatus["status"],
       data: {
         type: "Column",
