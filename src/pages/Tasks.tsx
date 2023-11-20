@@ -9,14 +9,14 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+
 import { createPortal } from "react-dom";
 import TaskPad from "../components/TaskPad";
 
-import { SortableContext, arrayMove } from "@dnd-kit/sortable";
 import { DateTime } from "luxon";
 import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { v4 } from "uuid";
+import { useState } from "react";
 
 import Column from "../components/Column";
 import AllModal from "../components/AllModal";
@@ -63,7 +63,7 @@ export interface SubTasks {
 const ProjectsTasks = React.memo(() => {
   let { state: currentProject } = useLocation();
 
-  // ==============================TASK FILTER=========================
+  // ==============================TASK SELECTORS=========================
   const currenTasksStore = useSelector(
     selectTasksOfTheCurrentProject(currentProject.projectID)
   );
@@ -138,13 +138,74 @@ const ProjectsTasks = React.memo(() => {
     })
   );
 
-  const [tasks, setTasks] = useState<Tasks[]>(currenTasksStore);
   const [activeTask, setActiveTask] = useState<Tasks | null>(null);
 
   function onDragStart(event: DragStartEvent) {
     if (event.active.data.current?.type === "Task") {
       setActiveTask(event.active.data.current.task);
       return;
+    }
+  }
+
+  function onDragOver(event: DragOverEvent) {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id;
+    const overId = over.id;
+
+    if (activeId === overId) return;
+
+    const isActiveATask = active.data.current?.type === "Task";
+    const isOverATask = over.data.current?.type === "Task";
+
+    if (!isActiveATask) return;
+
+    // Im dropping a Task over another Task
+    if (isActiveATask && isOverATask) {
+      const activeIndex = currenTasksStore.findIndex(
+        (t: Tasks) => t.id === activeId
+      );
+      const overIndex = currenTasksStore.findIndex(
+        (t: Tasks) => t.id === overId
+      );
+
+      if (
+        currenTasksStore[activeIndex].status !==
+        currenTasksStore[overIndex].status
+      ) {
+        // Fix introduced after video recording
+        currenTasksStore[activeIndex].status =
+          currenTasksStore[overIndex].status;
+        store.dispatch(
+          setTask(
+            arrayMove(currenTasksStore, activeIndex, overIndex - 1),
+            currentProject.projectID
+          )
+        );
+      }
+
+      store.dispatch(
+        setTask(
+          arrayMove(currenTasksStore, activeIndex, overIndex),
+          currentProject.projectID
+        )
+      );
+    }
+
+    const isOverAColumn = over.data.current?.type === "Column";
+
+    // Im dropping a Task over a column
+    if (isActiveATask && isOverAColumn) {
+      const activeIndex = currenTasksStore.findIndex((t) => t.id === activeId);
+
+      currenTasksStore[activeIndex].status = overId as TasksStatus["status"];
+      store.dispatch(
+        setTask(
+          arrayMove(currenTasksStore, activeIndex, activeIndex),
+          currentProject.projectID
+        )
+      );
     }
   }
 
@@ -158,62 +219,7 @@ const ProjectsTasks = React.memo(() => {
     const overId = over.id;
 
     if (activeId === overId) return;
-
-    // const isActiveAColumn = active.data.current?.type === "Column";
-    // if (!isActiveAColumn) return;
-
-    // console.log("DRAG END");
   }
-
-  function onDragOver(event: DragOverEvent) {
-    const { active, over } = event;
-    if (!over) return;
-
-    const activeId = active.id;
-    const overId = over.id;
-    // const overId = over.id as string | TasksStatus["status"];
-    console.log("drag over", overId);
-    // const overId: TasksStatus["status"] = over.id;
-
-    if (activeId === overId) return;
-
-    const isActiveATask = active.data.current?.type === "Task";
-    const isOverATask = over.data.current?.type === "Task";
-
-    if (!isActiveATask) return;
-
-    // Im dropping a Task over another Task
-    if (isActiveATask && isOverATask) {
-      setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t: Tasks) => t.id === activeId);
-        const overIndex = tasks.findIndex((t: Tasks) => t.id === overId);
-
-        if (tasks[activeIndex].status !== tasks[overIndex].status) {
-          // Fix introduced after video recording
-          tasks[activeIndex].status = tasks[overIndex].status;
-          return arrayMove(tasks, activeIndex, overIndex - 1);
-        }
-
-        return arrayMove(tasks, activeIndex, overIndex);
-      });
-    }
-
-    const isOverAColumn = over.data.current?.type === "Column";
-
-    // Im dropping a Task over a column
-    if (isActiveATask && isOverAColumn) {
-      setTasks((tasks) => {
-        const activeIndex = tasks.findIndex((t) => t.id === activeId);
-
-        tasks[activeIndex].status = overId as TasksStatus["status"];
-        // console.log("DROPPING TASK OVER COLUMN", { activeIndex });
-        return arrayMove(tasks, activeIndex, activeIndex);
-      });
-    }
-  }
-  useEffect(() => {
-    store.dispatch(setTask(tasks, currentProject.projectID));
-  }, [tasks]);
 
   // ==============================RENDER FASE===============================
 
