@@ -72,15 +72,6 @@ const ProjectsTasks = React.memo(() => {
 
   const tasksStore = useSelector(selectAllTasks);
 
-  // const queueTasks = useSelector(selectQueueTasks).filter(
-  //   (task) => task.currentProjectID === currentProject.projectID
-  // );
-  // const developmentTasks = useSelector(selectDevelopmentTasks).filter(
-  //   (task) => task.currentProjectID === currentProject.projectID
-  // );
-  // const doneTasks = useSelector(selectDoneTasks).filter(
-  //   (task) => task.currentProjectID === currentProject.projectID
-  // );
   // ==============================COLUMNS=============================
   const columnsArray: {
     status: TasksStatus["status"];

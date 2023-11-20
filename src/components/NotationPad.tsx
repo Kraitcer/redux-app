@@ -1,5 +1,4 @@
 import { Text, Box, Flex, HStack } from "@chakra-ui/react";
-import { useDrag, useDrop } from "react-dnd";
 import { dndItemsTypes } from "../utilities/dndItemsTypes";
 
 import { useMotionValue, Reorder, useDragControls } from "framer-motion";
@@ -79,7 +78,7 @@ export const NotationPad = ({
           w={width}
           h={10}
           display={"flex"}
-          justifyContent={"center"}
+          // justifyContent={"center"}
           alignItems={"center"}
           cursor={"pointer"}
         >
