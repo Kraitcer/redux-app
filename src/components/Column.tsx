@@ -10,12 +10,13 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import TaskPad from "./TaskPad";
-import { Tasks, TasksStatus } from "../pages/Tasks";
+import { Columns, Tasks, TasksStatus } from "../pages/Tasks";
 import { DateTime } from "luxon";
 import React, { useMemo } from "react";
-import { SortableContext } from "@dnd-kit/sortable";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 
 interface ColumnProps {
+  column: Columns;
   today?: DateTime;
   tasks: Tasks[];
   currentProjectID: string;
@@ -28,7 +29,7 @@ interface ColumnProps {
 
 const Column = React.memo(
   ({
-    today,
+    column,
     tasks,
     columntName,
     columntColor,
@@ -36,6 +37,21 @@ const Column = React.memo(
     onDelete,
     onEdit,
   }: ColumnProps) => {
+    const {
+      setNodeRef,
+      attributes,
+      listeners,
+      transform,
+      transition,
+      isDragging,
+    } = useSortable({
+      id: columntName as TasksStatus["status"],
+      data: {
+        type: "Column",
+        column,
+      },
+    });
+
     const tasksIds = useMemo(() => {
       return tasks.map((task) => task.id);
     }, [tasks]);
@@ -43,6 +59,7 @@ const Column = React.memo(
     return (
       <>
         <Flex
+          ref={setNodeRef}
           w={"560px"}
           h={{ base: "160px", md: "auto" }}
           overflowY={"auto"}

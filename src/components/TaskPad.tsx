@@ -3,7 +3,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IoTrashBinSharp, BiEdit, MdDragIndicator } from "../utilities/icons";
 import TimeLeftBadge from "./badges/TimeLeftBadge";
-import { Tasks } from "../pages/Tasks";
+import { Tasks, TasksStatus } from "../pages/Tasks";
 import React, { useState } from "react";
 import ActiveSubTaskBadge from "././badges/ActiveSubTaskBadge";
 
@@ -27,6 +27,7 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
   } = useSortable({
     id: task.id,
     data: {
+      status: task.status as TasksStatus["status"],
       type: "Task",
       task,
     },
@@ -124,8 +125,6 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
       </Flex>
     </HStack>
   );
-
-  //   <div></div>;
 });
 
 export default TaskPad;

@@ -37,6 +37,11 @@ import React from "react";
 export interface TasksStatus {
   status: "queue" | "development" | "done";
 }
+export interface Columns {
+  status: TasksStatus["status"];
+  columntColor: string;
+  tasks: Tasks[];
+}
 export interface Tasks {
   id: string;
   taskName: string;
@@ -73,11 +78,7 @@ const ProjectsTasks = React.memo(() => {
   const tasksStore = useSelector(selectAllTasks);
 
   // ==============================COLUMNS=============================
-  const columnsArray: {
-    status: TasksStatus["status"];
-    columntColor: string;
-    tasks: Tasks[];
-  }[] = [
+  const columnsArray: Columns[] = [
     { status: "queue", columntColor: "green.200", tasks: queueTasks },
     {
       status: "development",
@@ -141,11 +142,6 @@ const ProjectsTasks = React.memo(() => {
   const [activeTask, setActiveTask] = useState<Tasks | null>(null);
 
   function onDragStart(event: DragStartEvent) {
-    // if (event.active.data.current?.type === "Column") {
-    //   setActiveColumn(event.active.data.current.column);
-    //   return;
-    // }
-
     if (event.active.data.current?.type === "Task") {
       setActiveTask(event.active.data.current.task);
       return;
@@ -153,7 +149,6 @@ const ProjectsTasks = React.memo(() => {
   }
 
   function onDragEnd(event: DragEndEvent) {
-    // setActiveColumn(null);
     setActiveTask(null);
 
     const { active, over } = event;
@@ -176,6 +171,9 @@ const ProjectsTasks = React.memo(() => {
 
     const activeId = active.id;
     const overId = over.id;
+    // const overId = over.id as string | TasksStatus["status"];
+    console.log("drag over", overId);
+    // const overId: TasksStatus["status"] = over.id;
 
     if (activeId === overId) return;
 
@@ -190,7 +188,7 @@ const ProjectsTasks = React.memo(() => {
         const activeIndex = tasks.findIndex((t: Tasks) => t.id === activeId);
         const overIndex = tasks.findIndex((t: Tasks) => t.id === overId);
 
-        if (tasks[activeIndex].status != tasks[overIndex].status) {
+        if (tasks[activeIndex].status !== tasks[overIndex].status) {
           // Fix introduced after video recording
           tasks[activeIndex].status = tasks[overIndex].status;
           return arrayMove(tasks, activeIndex, overIndex - 1);
@@ -200,15 +198,14 @@ const ProjectsTasks = React.memo(() => {
       });
     }
 
-    // const isOverAColumn = over.data.current?.type === "Column";
+    const isOverAColumn = over.data.current?.type === "Column";
 
     // Im dropping a Task over a column
-    // if (isActiveATask && isOverAColumn) {
-    if (isActiveATask) {
+    if (isActiveATask && isOverAColumn) {
       setTasks((tasks) => {
         const activeIndex = tasks.findIndex((t) => t.id === activeId);
 
-        // tasks[activeIndex].id = overId;
+        tasks[activeIndex].status = overId as TasksStatus["status"];
         // console.log("DROPPING TASK OVER COLUMN", { activeIndex });
         return arrayMove(tasks, activeIndex, activeIndex);
       });
@@ -257,7 +254,7 @@ const ProjectsTasks = React.memo(() => {
             >
               {columnsArray.map((column, index) => (
                 <Column
-                  // ref={setNodeRef}
+                  column={column}
                   key={index}
                   onEdit={openModal}
                   onDelete={onDelete}
