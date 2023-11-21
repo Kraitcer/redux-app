@@ -44,7 +44,7 @@ export const NotationPad = ({
   index,
 }: Props) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: notationID });
+    useSortable({ id: notationID, data: { type: "Project", notationFor } });
   const style = {
     transition,
     transform: CSS.Transform.toString(transform),
@@ -58,10 +58,10 @@ export const NotationPad = ({
       borderLeftRadius={10}
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
     >
       <Flex
+        {...attributes}
+        {...listeners}
         bg={"orange.300"}
         h={10}
         w={"36px"}

@@ -19,7 +19,7 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { DragEndEvent } from "@dnd-kit/core";
+import { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import {
   MdDone,
   MdOutlineNotificationsActive,
@@ -99,6 +99,15 @@ const ProjectsList = () => {
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================
+  const [activeTask, setActiveProject] = useState<Projects | null>(null);
+
+  function onDragStart(event: DragStartEvent) {
+    if (event.active.data.current?.type === "Project") {
+      setActiveProject(event.active.data.current.type);
+      return;
+    }
+  }
+
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
@@ -149,7 +158,8 @@ const ProjectsList = () => {
             pb={2}
           >
             <DndContext
-              collisionDetection={closestCenter}
+              // collisionDetection={closestCenter}
+              onDragStart={onDragStart}
               onDragEnd={onDragEnd}
             >
               <SortableContext

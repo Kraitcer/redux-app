@@ -50,17 +50,10 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
     );
   }
   return (
-    <HStack
-      w={"530px"}
-      gap={0}
-      mr={0}
-      h={16}
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-    >
+    <HStack w={"530px"} gap={0} mr={0} h={16} ref={setNodeRef} style={style}>
       <Flex
+        {...attributes}
+        {...listeners}
         bg={"orange.300"}
         h={"100%"}
         w={"36px"}
