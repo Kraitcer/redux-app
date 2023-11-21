@@ -16,6 +16,11 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
+type Notation = {
+  notation: "Project" | "SubTask";
+};
+
 interface Props {
   notationFor: Projects | SubTasks;
   nameWidth: string;
