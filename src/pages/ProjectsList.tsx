@@ -41,8 +41,6 @@ const ProjectsList = () => {
   const completeProjects = useSelector(selectCompletedProjects);
   const activeProjects = useSelector(selectActiveProjects);
 
-  const [projectsList, setProjectsList] = useState<Projects[]>(projects);
-
   const [renderFilter, setRenderFilter] = useState("all");
 
   const visibleProjects =
@@ -95,9 +93,6 @@ const ProjectsList = () => {
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================
-  useEffect(() => {
-    store.dispatch(setProjects(projectsList));
-  }, [projectsList]);
   // ==============================RENDER FASE===============================
   return (
     <Flex
@@ -137,42 +132,36 @@ const ProjectsList = () => {
             pt={3}
             pb={2}
           >
-            <Reorder.Group
-              axis="y"
-              onReorder={setProjectsList}
-              values={projects}
-            >
-              {visibleProjects.map((project, index) =>
-                project.isEditing ? (
-                  <EditProject
-                    key={index}
-                    notationID={project.id}
-                    notationName={project.projectName}
-                    onEdit={editProjectOut}
-                  />
-                ) : (
-                  <ProjectPad
-                    notationFor={project}
-                    nameWidth={"300px"}
-                    width={"100%"}
-                    onDelete={deleteProjectOut}
-                    key={project.id}
-                    index={index}
-                    notationID={project.id}
-                    notationName={project.projectName}
-                    complited={project.complited}
-                    onEdit={editProjectOut}
-                    onComplete={completeProjectOut}
-                    children={
-                      <TasksBadge
-                        currentProjectID={project.id}
-                        currentProjectName={project.projectName}
-                      />
-                    }
-                  />
-                )
-              )}
-            </Reorder.Group>
+            {visibleProjects.map((project, index) =>
+              project.isEditing ? (
+                <EditProject
+                  key={index}
+                  notationID={project.id}
+                  notationName={project.projectName}
+                  onEdit={editProjectOut}
+                />
+              ) : (
+                <ProjectPad
+                  notationFor={project}
+                  nameWidth={"300px"}
+                  width={"100%"}
+                  onDelete={deleteProjectOut}
+                  key={project.id}
+                  index={index}
+                  notationID={project.id}
+                  notationName={project.projectName}
+                  complited={project.complited}
+                  onEdit={editProjectOut}
+                  onComplete={completeProjectOut}
+                  tasksBadge={
+                    <TasksBadge
+                      currentProjectID={project.id}
+                      currentProjectName={project.projectName}
+                    />
+                  }
+                />
+              )
+            )}
           </Flex>
         </Flex>
 

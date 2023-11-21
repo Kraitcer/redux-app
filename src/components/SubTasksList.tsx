@@ -76,7 +76,7 @@ const SubTasksList = ({ currentTaskID }: Props) => {
             <SubTaskPad
               notationFor={subTask}
               nameWidth={"350px"}
-              children={""}
+              tasksBadge={""}
               width={"100%"}
               onDelete={deleteSubTaskOut}
               key={subTask.id}
