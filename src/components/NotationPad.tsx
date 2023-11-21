@@ -9,7 +9,13 @@ import {
 } from "../utilities/icons";
 import { Projects } from "../pages/ProjectsList";
 import { SubTasks } from "../pages/Tasks";
-
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 interface Props {
   notationFor: Projects | SubTasks;
   nameWidth: string;
@@ -37,8 +43,24 @@ export const NotationPad = ({
   onComplete: completeNotation,
   index,
 }: Props) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: notationID });
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
   return (
-    <HStack gap={0} mr={0} mb={1} w={"100%"} borderLeftRadius={10}>
+    <HStack
+      gap={0}
+      mr={0}
+      mb={1}
+      w={"100%"}
+      borderLeftRadius={10}
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
       <Flex
         bg={"orange.300"}
         h={10}
@@ -51,7 +73,6 @@ export const NotationPad = ({
         alignItems={"center"}
         cursor={"-webkit-grab"}
       >
-        {/* <ReorderIcon dragControls={dragControls} /> */}
         <MdDragIndicator size={"20px"} />
       </Flex>
       <Box
@@ -60,13 +81,11 @@ export const NotationPad = ({
         w={width}
         h={10}
         display={"flex"}
-        // justifyContent={"center"}
         alignItems={"center"}
         cursor={"pointer"}
       >
         <Flex justifyContent={"space-between"} alignItems={"center"}>
           <Text
-            // cursor={"none"}
             as={complited === true ? "del" : undefined}
             m={0}
             ml={2}

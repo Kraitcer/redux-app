@@ -12,8 +12,14 @@ import {
 } from "../store/projectsReducer";
 
 import store from "../store/store";
-import { Reorder } from "framer-motion";
-
+import { closestCenter, DndContext } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { DragEndEvent } from "@dnd-kit/core";
 import {
   MdDone,
   MdOutlineNotificationsActive,
@@ -93,6 +99,16 @@ const ProjectsList = () => {
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================
+  const onDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+    if (active.id === over.id) {
+      return;
+    }
+    const oldIndex = projects.findIndex((project) => project.id === active.id);
+    const newIndex = projects.findIndex((project) => project.id === over.id);
+    store.dispatch(setProjects(arrayMove(projects, oldIndex, newIndex)));
+  };
   // ==============================RENDER FASE===============================
   return (
     <Flex
@@ -132,36 +148,46 @@ const ProjectsList = () => {
             pt={3}
             pb={2}
           >
-            {visibleProjects.map((project, index) =>
-              project.isEditing ? (
-                <EditProject
-                  key={index}
-                  notationID={project.id}
-                  notationName={project.projectName}
-                  onEdit={editProjectOut}
-                />
-              ) : (
-                <ProjectPad
-                  notationFor={project}
-                  nameWidth={"300px"}
-                  width={"100%"}
-                  onDelete={deleteProjectOut}
-                  key={project.id}
-                  index={index}
-                  notationID={project.id}
-                  notationName={project.projectName}
-                  complited={project.complited}
-                  onEdit={editProjectOut}
-                  onComplete={completeProjectOut}
-                  tasksBadge={
-                    <TasksBadge
-                      currentProjectID={project.id}
-                      currentProjectName={project.projectName}
+            <DndContext
+              collisionDetection={closestCenter}
+              onDragEnd={onDragEnd}
+            >
+              <SortableContext
+                items={projects}
+                strategy={verticalListSortingStrategy}
+              >
+                {visibleProjects.map((project, index) =>
+                  project.isEditing ? (
+                    <EditProject
+                      key={index}
+                      notationID={project.id}
+                      notationName={project.projectName}
+                      onEdit={editProjectOut}
                     />
-                  }
-                />
-              )
-            )}
+                  ) : (
+                    <ProjectPad
+                      notationFor={project}
+                      nameWidth={"300px"}
+                      width={"100%"}
+                      onDelete={deleteProjectOut}
+                      key={project.id}
+                      index={index}
+                      notationID={project.id}
+                      notationName={project.projectName}
+                      complited={project.complited}
+                      onEdit={editProjectOut}
+                      onComplete={completeProjectOut}
+                      tasksBadge={
+                        <TasksBadge
+                          currentProjectID={project.id}
+                          currentProjectName={project.projectName}
+                        />
+                      }
+                    />
+                  )
+                )}
+              </SortableContext>
+            </DndContext>
           </Flex>
         </Flex>
 
