@@ -77,10 +77,10 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
         pr={2}
         justifyContent={"center"}
         alignItems={"center"}
-        cursor={"pointer"}
+        // cursor={"none"}
       >
         <Flex w={"404px"}>
-          <Flex w={"100%"} flexDirection={"column"} gap={2}>
+          <Flex w={"100%"} flexDirection={"column"} gap={1.5}>
             <Text
               m={0}
               textOverflow={"ellipsis"}
@@ -89,9 +89,14 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
             >
               {task.taskName}
             </Text>
-            <Flex gap={2} flexDirection={"row-reverse"} alignItems={"center"}>
-              <TimeLeftBadge task={task} />
+            <Flex
+              gap={2}
+              flexDirection={"row-reverse"}
+              alignItems={"center"}
+              px={0}
+            >
               <ActiveSubTaskBadge currentTaskID={task.id} />
+              <TimeLeftBadge task={task} />
             </Flex>
           </Flex>
         </Flex>
