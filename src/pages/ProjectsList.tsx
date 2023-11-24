@@ -12,7 +12,14 @@ import {
 } from "../store/projectsReducer";
 
 import store from "../store/store";
-import { closestCenter, DndContext } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
@@ -99,7 +106,14 @@ const ProjectsList = () => {
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================
-
+  const sensors = useSensors(
+    useSensor(TouchSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    })
+  );
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
@@ -150,6 +164,7 @@ const ProjectsList = () => {
             pb={2}
           >
             <DndContext
+              sensors={sensors}
               collisionDetection={closestCenter}
               // onDragStart={onDragStart}
               onDragEnd={onDragEnd}

@@ -8,6 +8,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  TouchSensor,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 
@@ -131,6 +132,7 @@ const ProjectsTasks = React.memo(() => {
   // ==============================DND FUNCTIONALITY=========================
 
   const sensors = useSensors(
+    useSensor(TouchSensor),
     useSensor(PointerSensor, {
       activationConstraint: {
         distance: 10,
