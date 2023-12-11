@@ -50,12 +50,21 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
     );
   }
   return (
-    <HStack w={"530px"} gap={0} mr={0} h={16} ref={setNodeRef} style={style}>
+    <HStack
+      w={"100%"}
+      // w={"530px"}
+      gap={0}
+      mr={0}
+      h={16}
+      ref={setNodeRef}
+      style={style}
+    >
       <Flex
         {...attributes}
         {...listeners}
         bg={"orange.300"}
         h={"100%"}
+        // w={"6%"}
         w={"36px"}
         gap={2}
         color={"white"}
@@ -67,28 +76,34 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
       >
         <MdDragIndicator size={"20px"} />
       </Flex>
-      <Box
+      <Flex
+        w={"86%"}
         h={"100%"}
         bg={"blue.400"}
         color={"white"}
-        w={"100%"}
-        p={1.5}
+        pt={1.5}
         pl={3}
         pr={2}
-        justifyContent={"center"}
-        alignItems={"center"}
+        // justifyContent={"center"}
+        // alignItems={"center"}
         // cursor={"none"}
       >
-        <Flex w={"404px"}>
+        <Flex
+          w={"100%"}
+          // w={"404px"}
+        >
           <Flex w={"100%"} flexDirection={"column"} gap={1.5}>
-            <Text
-              m={0}
-              textOverflow={"ellipsis"}
-              whiteSpace={"nowrap"}
-              overflow={"hidden"}
-            >
-              {task.taskName}
-            </Text>
+            <Flex>
+              <Text
+                px={0}
+                m={0}
+                textOverflow={"ellipsis"}
+                whiteSpace={"nowrap"}
+                overflow={"hidden"}
+              >
+                {task.taskName}
+              </Text>
+            </Flex>
             <Flex
               gap={2}
               flexDirection={"row-reverse"}
@@ -100,11 +115,12 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
             </Flex>
           </Flex>
         </Flex>
-      </Box>
+      </Flex>
       <Flex h={"100%"}>
         <Flex>
           <Flex
             bg={"orange.300"}
+            // w={"30%"}
             w={"70px"}
             // pt={3}
             pl={3}

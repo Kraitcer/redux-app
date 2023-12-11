@@ -53,14 +53,17 @@ const Column = React.memo(
       <>
         <Flex
           ref={setNodeRef}
-          w={"560px"}
-          h={{ base: "160px", md: "auto" }}
+          w={"100%"}
+          // w={"auto"}
+          h={"auto"}
+          // w={"560px"}
+          // h={{ base: "160px", md: "auto" }}
           overflowY={"auto"}
           // overflowX={"hidden"}
           borderRadius={20}
           bg={columntColor}
           flexDirection={"column"}
-          alignItems={"center"}
+          // alignItems={"center"}
           p={3}
           gap={3}
           // px={20}
@@ -80,7 +83,7 @@ const Column = React.memo(
           </Flex>
           <Flex
             // overflowY={"auto"}
-            w={"530px"}
+            // w={"530px"}
             h={"100%"}
             flexDirection={{ base: "row", md: "column" }}
             gap={3}

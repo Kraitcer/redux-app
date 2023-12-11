@@ -252,8 +252,14 @@ const ProjectsTasks = React.memo(() => {
         >
           {currentProject.projectName}
         </Heading>
-        <Flex bg={"blue.100"} borderRadius={20} p={4}>
-          <SimpleGrid columns={{ base: 1, md: 3 }} spacing={{ base: 4, md: 4 }}>
+        <Flex bg={"blue.100"} borderRadius={20} p={4} w={"95vw"}>
+          <SimpleGrid
+            w={"100%"}
+            // columns={3}
+            spacing={4}
+            columns={{ base: 1, md: 3 }}
+            // spacing={{ base: 4, md: 4 }}
+          >
             <DndContext
               sensors={sensors}
               onDragStart={onDragStart}
