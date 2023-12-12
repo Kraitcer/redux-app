@@ -42,7 +42,7 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
         bg={"blue.100"}
         borderRadius={10}
         h={16}
-        w={"530px"}
+        w={{ base: "243px", md: "100%" }}
         ref={setNodeRef}
         style={style}
         opacity={0.7}

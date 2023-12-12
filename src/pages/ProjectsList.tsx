@@ -146,7 +146,7 @@ const ProjectsList = () => {
       <VStack gap={0} mt={6}>
         <AddProject
           addTodo={addProjectToStore}
-          placeHolder="Choose New Project"
+          placeHolder="Create New Project"
           buttonName="Add"
         />
         <Flex

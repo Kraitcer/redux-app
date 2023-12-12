@@ -74,7 +74,7 @@ const SubTasksList = ({ currentTaskID }: Props) => {
     <>
       <AddSubTask
         addTodo={addSubTaskToStore}
-        placeHolder="Choose Sub Task"
+        placeHolder="Create Sub Task"
         buttonName="Add"
       />
       <DndContext
