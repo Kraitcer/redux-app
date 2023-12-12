@@ -149,7 +149,11 @@ const ProjectsList = () => {
           placeHolder="Choose New Project"
           buttonName="Add"
         />
-        <Flex w={"560px"} h={"34rem"} mb={0}>
+        <Flex
+          w={{ lg: "560px", md: "560px", sm: "95vw", base: "95vw" }}
+          h={"34rem"}
+          mb={0}
+        >
           <Flex
             flexDirection={"column"}
             overflowY={"auto"}
@@ -184,7 +188,7 @@ const ProjectsList = () => {
                   ) : (
                     <ProjectPad
                       notationFor={project}
-                      nameWidth={"300px"}
+                      nameWidth={"80%"}
                       width={"100%"}
                       onDelete={deleteProjectOut}
                       key={project.id}

@@ -60,6 +60,7 @@ export const NotationPad = ({
       mr={0}
       mb={1}
       w={"100%"}
+      h={{ sm: 10, md: 10, base: 16 }}
       borderLeftRadius={10}
       ref={setNodeRef}
       style={style}
@@ -68,8 +69,9 @@ export const NotationPad = ({
         {...attributes}
         {...listeners}
         bg={"orange.300"}
-        h={10}
-        w={"36px"}
+        h={"100%"}
+        w={"7%"}
+        // w={"36px"}
         gap={2}
         color={"white"}
         _hover={{ bg: "orange.400" }}
@@ -84,12 +86,19 @@ export const NotationPad = ({
         bg={"blue.400"}
         color={"white"}
         w={width}
-        h={10}
+        h={"100%"}
         display={"flex"}
         alignItems={"center"}
         cursor={"pointer"}
       >
-        <Flex justifyContent={"space-between"} alignItems={"center"}>
+        <Flex
+          w={"100%"}
+          // justifyContent={{ md: "space-between", sm: "end" }}
+          flexDirection={{ base: "column", sm: "row", md: "row" }}
+          // alignItems={"center"}
+          gap={1}
+          px={1}
+        >
           <Text
             as={complited === true ? "del" : undefined}
             m={0}
@@ -101,32 +110,30 @@ export const NotationPad = ({
           >
             {notationName}
           </Text>
-          <Flex>{children}</Flex>
-        </Flex>
-      </Box>
-      <Flex>
-        <Flex>
-          <Flex
-            bg={"orange.300"}
-            h={10}
-            w={"96px"}
-            pt={3}
-            pl={3}
-            pr={3}
-            gap={2}
-            color={"white"}
-            _hover={{ bg: "orange.400" }}
-            borderRightRadius={10}
-          >
-            <BiEdit onClick={() => editNotation(notationID, notationName)} />
-            {complited ? (
-              <FaTrashRestoreAlt onClick={() => completeNotation(notationID)} />
-            ) : (
-              <MdDone onClick={() => completeNotation(notationID)} />
-            )}
-            <IoTrashBinSharp onClick={() => onDelete(notationID)} />
+          <Flex w={"100%"} flexDirection={"row-reverse"}>
+            {children}
           </Flex>
         </Flex>
+      </Box>
+      <Flex
+        bg={"orange.300"}
+        h={"100%"}
+        w={"96px"}
+        pt={3}
+        pl={3}
+        pr={3}
+        gap={2}
+        color={"white"}
+        _hover={{ bg: "orange.400" }}
+        borderRightRadius={10}
+      >
+        <BiEdit onClick={() => editNotation(notationID, notationName)} />
+        {complited ? (
+          <FaTrashRestoreAlt onClick={() => completeNotation(notationID)} />
+        ) : (
+          <MdDone onClick={() => completeNotation(notationID)} />
+        )}
+        <IoTrashBinSharp onClick={() => onDelete(notationID)} />
       </Flex>
     </HStack>
   );

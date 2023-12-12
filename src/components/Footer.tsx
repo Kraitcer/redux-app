@@ -35,6 +35,7 @@ export const Footer = ({ badge, icon, name, onClick }: FooterProps) => {
           {badge}
         </Badge>
         <Text
+          display={{ sm: "flex", base: "none", md: "flex" }}
           color={"blue.400"}
           textTransform={"uppercase"}
           fontSize={20}

@@ -51,8 +51,10 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
   }
   return (
     <HStack
-      w={"100%"}
-      // w={"530px"}
+      w={{ base: "243px", md: "100%" }}
+      // w={{ base: "49%", md: "100%" }}
+      // w={"100%"}
+      // w={"250px"}
       gap={0}
       mr={0}
       h={16}
@@ -64,8 +66,8 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
         {...listeners}
         bg={"orange.300"}
         h={"100%"}
-        // w={"6%"}
-        w={"36px"}
+        w={"7%"}
+        // w={"36px"}
         gap={2}
         color={"white"}
         _hover={{ bg: "orange.400" }}
@@ -74,10 +76,11 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
         alignItems={"center"}
         cursor={"-webkit-grab"}
       >
-        <MdDragIndicator size={"20px"} />
+        <MdDragIndicator style={{ margin: "1px" }} size={"20px"} />
       </Flex>
       <Flex
-        w={"86%"}
+        // w={"100%"}
+        w={"80%"}
         h={"100%"}
         bg={"blue.400"}
         color={"white"}
@@ -93,10 +96,9 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
           // w={"404px"}
         >
           <Flex w={"100%"} flexDirection={"column"} gap={1.5}>
-            <Flex>
+            <Flex px={0} m={0}>
               <Text
-                px={0}
-                m={0}
+                // textOverflow={"clip"}
                 textOverflow={"ellipsis"}
                 whiteSpace={"nowrap"}
                 overflow={"hidden"}
@@ -116,24 +118,28 @@ const TaskPad = React.memo(({ onEdit, onDelete, task }: Prop) => {
           </Flex>
         </Flex>
       </Flex>
-      <Flex h={"100%"}>
-        <Flex>
-          <Flex
-            bg={"orange.300"}
-            // w={"30%"}
-            w={"70px"}
-            // pt={3}
-            pl={3}
-            gap={2}
-            color={"white"}
-            _hover={{ bg: "orange.400" }}
-            borderRightRadius={10}
-            alignItems={"center"}
-          >
-            <BiEdit onClick={() => onEdit(task.id)} />
-            <IoTrashBinSharp onClick={() => onDelete(task.id)} />
-          </Flex>
-        </Flex>
+      <Flex
+        bg={"orange.300"}
+        h={"100%"}
+        w={"13%"}
+        // w={"70px"}
+        // pt={3}
+        // pl={3}
+        gap={2}
+        color={"white"}
+        _hover={{ bg: "orange.400" }}
+        borderRightRadius={10}
+        flexDirection={{
+          base: "column",
+          sm: "column",
+          md: "column",
+          xl: "row",
+        }}
+        justifyContent={"center"}
+        alignItems={"center"}
+      >
+        <BiEdit onClick={() => onEdit(task.id)} size={"18px"} />
+        <IoTrashBinSharp onClick={() => onDelete(task.id)} size={"18px"} />
       </Flex>
     </HStack>
   );

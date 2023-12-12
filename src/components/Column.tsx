@@ -82,11 +82,12 @@ const Column = React.memo(
             </Button>
           </Flex>
           <Flex
-            // overflowY={"auto"}
+            overflowY={"auto"}
             // w={"530px"}
             h={"100%"}
             flexDirection={{ base: "row", md: "column" }}
             gap={3}
+            // px={2}
           >
             <SortableContext items={tasksIds}>
               {tasks.map((task) => (
