@@ -257,7 +257,7 @@ const ProjectsTasks = React.memo(() => {
             bgGradient="linear(to-l, #7928CA, #FF0080)"
             bgClip="text"
             mt={4}
-            cursor={"pointer"}
+            cursor={"w-resize"}
             onClick={() => navigate("/")}
           >
             {currentProject.projectName}

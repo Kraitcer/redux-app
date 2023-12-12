@@ -1,4 +1,4 @@
-import { Flex, Text, Badge } from "@chakra-ui/react";
+import { Flex, Text, Badge, Box } from "@chakra-ui/react";
 import React from "react";
 
 interface FooterProps {
@@ -21,8 +21,9 @@ export const Footer = ({ badge, icon, name, onClick }: FooterProps) => {
         p={2}
         borderRadius={20}
         cursor={"pointer"}
-        _hover={{ bg: "blue.200" }}
+        _hover={{ bg: "blue.300" }}
         onClick={onClick}
+        role="group"
       >
         <Badge
           display={"flex"}
@@ -31,6 +32,7 @@ export const Footer = ({ badge, icon, name, onClick }: FooterProps) => {
           w={8}
           justifyContent={"center"}
           alignItems={"center"}
+          _groupHover={{ bg: "blue.400", color: "white" }}
         >
           {badge}
         </Badge>
@@ -41,11 +43,21 @@ export const Footer = ({ badge, icon, name, onClick }: FooterProps) => {
           fontSize={20}
           p={0}
           m={0}
-          _hover={{ color: "white" }}
+          _groupHover={{ color: "white" }}
         >
           {name}
         </Text>
-        <Flex color={"blue.400"}>{icon}</Flex>
+        <Flex color={"blue.400"} _groupHover={{ color: "white" }}>
+          {icon}
+        </Flex>
+        {/* <Box role="group" w={20} h={20} bg={"white"}>
+          <Box
+            _hover={{ fontWeight: "semibold" }}
+            _groupHover={{ color: "tomato" }}
+          >
+            fuck
+          </Box>
+        </Box> */}
       </Flex>
     </>
   );
