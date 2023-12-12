@@ -93,9 +93,7 @@ export const NotationPad = ({
       >
         <Flex
           w={"100%"}
-          // justifyContent={{ md: "space-between", sm: "end" }}
           flexDirection={{ base: "column", sm: "row", md: "row" }}
-          // alignItems={"center"}
           gap={1}
           px={1}
         >

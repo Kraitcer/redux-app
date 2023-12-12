@@ -1,4 +1,4 @@
-import { Flex, Heading, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Flex, Heading, SimpleGrid, VStack, Tooltip } from "@chakra-ui/react";
 import {
   DndContext,
   DragEndEvent,
@@ -11,6 +11,7 @@ import {
   TouchSensor,
 } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
+import { useNavigate } from "react-router-dom";
 
 import { createPortal } from "react-dom";
 import TaskPad from "../components/TaskPad";
@@ -30,6 +31,7 @@ import {
   selectTasksOfTheCurrentProject,
   setTask,
 } from "../store/tasksReducer";
+import { deleteTaskSubTasks } from "../store/subTasksReducer";
 import store from "../store/store";
 import { useSelector } from "react-redux";
 
@@ -57,11 +59,14 @@ export interface SubTasks {
   id: string;
   subTaskName: string;
   currentTaskID: string;
+  currentProjectId: string;
   isEditing: boolean;
   complited: boolean;
 }
 
 const ProjectsTasks = React.memo(() => {
+  const navigate = useNavigate();
+
   let { state: currentProject } = useLocation();
 
   // ==============================TASK SELECTORS=========================
@@ -116,6 +121,7 @@ const ProjectsTasks = React.memo(() => {
   // ==============================DELETE=============================
   const onDelete = (id: string) => {
     store.dispatch(deleteTask(id));
+    store.dispatch(deleteTaskSubTasks(id));
   };
 
   // ==============================EDIT================================
@@ -236,22 +242,27 @@ const ProjectsTasks = React.memo(() => {
           <EditTask
             submit={() => setIsOpen1(false)}
             currentTask={currentTask}
+            currentProjectId={currentProject.projectID}
             onEdit={onEdit}
           />
         }
       />
       <VStack justifyContent={"center"} alignItems={"center"}>
-        <Heading
-          fontSize={{ base: "4xl", sm: "5xl", md: "6xl" }}
-          fontWeight="bold"
-          textAlign="center"
-          textTransform={"uppercase"}
-          bgGradient="linear(to-l, #7928CA, #FF0080)"
-          bgClip="text"
-          mt={4}
-        >
-          {currentProject.projectName}
-        </Heading>
+        <Tooltip label="Go back to Projects List Page">
+          <Heading
+            fontSize={{ base: "4xl", sm: "5xl", md: "6xl" }}
+            fontWeight="bold"
+            textAlign="center"
+            textTransform={"uppercase"}
+            bgGradient="linear(to-l, #7928CA, #FF0080)"
+            bgClip="text"
+            mt={4}
+            cursor={"pointer"}
+            onClick={() => navigate("/")}
+          >
+            {currentProject.projectName}
+          </Heading>
+        </Tooltip>
         <Flex bg={"blue.100"} borderRadius={20} p={4} w={"95vw"}>
           <SimpleGrid
             w={"100%"}

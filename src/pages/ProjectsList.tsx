@@ -10,6 +10,8 @@ import {
   selectCompletedProjects,
   selectActiveProjects,
 } from "../store/projectsReducer";
+import { deleteProjectTasks } from "../store/tasksReducer";
+import { deleteProjectSubTasks } from "../store/subTasksReducer";
 
 import store from "../store/store";
 import {
@@ -103,6 +105,8 @@ const ProjectsList = () => {
   // ==============================DELETE=============================
   const deleteProjectOut = (id: string) => {
     store.dispatch(deleteProject(id));
+    store.dispatch(deleteProjectTasks(id));
+    store.dispatch(deleteProjectSubTasks(id));
   };
 
   // ==============================PROJECTS MOOVING ITEMS=====================

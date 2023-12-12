@@ -26,16 +26,17 @@ import { DragEndEvent } from "@dnd-kit/core";
 
 interface Props {
   currentTaskID: string;
+  currentProjectId: string;
 }
 
-const SubTasksList = ({ currentTaskID }: Props) => {
+const SubTasksList = ({ currentTaskID, currentProjectId }: Props) => {
   const subTasksOfTheCurrentTask = useSelector(
     selectSubTasksOfTheCurrentTask(currentTaskID)
   );
 
   // ==============================ADD================================
   const addSubTaskToStore = (subTaskName: string) => {
-    store.dispatch(addSubTask(subTaskName, currentTaskID));
+    store.dispatch(addSubTask(subTaskName, currentTaskID, currentProjectId));
   };
   // ==============================EDIT===============================
 

@@ -7,21 +7,29 @@ import { createSelector } from "reselect";
 type SubTasksAction =
   | {
       type: "ADD_SUBTASK";
-      payload: { subTaskName: string; currentTaskID: string };
+      payload: {
+        subTaskName: string;
+        currentTaskID: string;
+        currentProjectId: string;
+      };
     }
   | { type: "EDIT_SUBTASK"; payload: { id: string; subTaskName: string } }
   | { type: "DELETE_SUBTASK"; payload: string }
+  | { type: "DELETE_TASK_SUBTASKS"; payload: string }
+  | { type: "DELETE_PROJECT_SUBTASKS"; payload: string }
   | { type: "COMPLETE_SUBTASK"; payload: string }
   | { type: "SET_SUBTASKS"; payload: SubTasks[] };
 // ==================================ACTIONS============================
 export const addSubTask = (
   subTaskName: string,
-  currentTaskID: string
+  currentTaskID: string,
+  currentProjectId: string
 ): SubTasksAction => ({
   type: "ADD_SUBTASK",
   payload: {
     subTaskName,
     currentTaskID,
+    currentProjectId,
   },
 });
 export const editSubTask = (
@@ -36,6 +44,14 @@ export const editSubTask = (
 });
 export const deleteSubTask = (id: string): SubTasksAction => ({
   type: "DELETE_SUBTASK",
+  payload: id,
+});
+export const deleteTaskSubTasks = (id: string): SubTasksAction => ({
+  type: "DELETE_TASK_SUBTASKS",
+  payload: id,
+});
+export const deleteProjectSubTasks = (id: string): SubTasksAction => ({
+  type: "DELETE_PROJECT_SUBTASKS",
   payload: id,
 });
 export const completeSubTask = (id: string): SubTasksAction => ({
@@ -59,6 +75,7 @@ export const subTasksReducer = (
           id: v4(),
           subTaskName: action.payload.subTaskName,
           currentTaskID: action.payload.currentTaskID,
+          currentProjectId: action.payload.currentProjectId,
           isEditing: false,
           complited: false,
         },
@@ -88,6 +105,14 @@ export const subTasksReducer = (
 
     case "DELETE_SUBTASK":
       return state.filter((subTask) => subTask.id !== action.payload);
+    case "DELETE_TASK_SUBTASKS":
+      return state.filter(
+        (subTask) => subTask.currentTaskID !== action.payload
+      );
+    case "DELETE_PROJECT_SUBTASKS":
+      return state.filter(
+        (subTask) => subTask.currentProjectId !== action.payload
+      );
     case "SET_SUBTASKS":
       return [...action.payload];
     default:

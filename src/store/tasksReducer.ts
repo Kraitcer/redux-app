@@ -17,6 +17,7 @@ type TaskAction =
       };
     }
   | { type: "DELETE_TASK"; payload: string }
+  | { type: "DELETE_PROJECT_TASKS"; payload: string }
   | {
       type: "EDIT_TASK";
       payload: {
@@ -67,6 +68,10 @@ export const deleteTask = (id: string): TaskAction => ({
   type: "DELETE_TASK",
   payload: id,
 });
+export const deleteProjectTasks = (id: string): TaskAction => ({
+  type: "DELETE_PROJECT_TASKS",
+  payload: id,
+});
 
 export const setTask = (
   task: Tasks[],
@@ -99,6 +104,8 @@ export const tasksReducer = (
       ];
     case "DELETE_TASK":
       return state.filter((task) => task.id !== action.payload);
+    case "DELETE_PROJECT_TASKS":
+      return state.filter((task) => task.currentProjectID !== action.payload);
     case "EDIT_TASK":
       return state.map((task) =>
         task.id === action.payload.id
