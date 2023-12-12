@@ -1,5 +1,4 @@
 import { Text, Box, Flex, HStack, Tooltip } from "@chakra-ui/react";
-import ButtonsWithToolTips from "./buttons/buttonsWithToolTips";
 import {
   FaTrashRestoreAlt,
   IoTrashBinSharp,
